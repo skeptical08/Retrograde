@@ -1,0 +1,8 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
+const ctx=vm.createContext({});vm.runInContext(fs.readFileSync('src/runtime.js','utf8')+';globalThis.create=createRetrogradeMarketplaceLifecycle',ctx);
+function setup({marketplace=true,sheetPresent=true}={}){let observer,called=0;const sheet={textContent:'/* Retrograde — an original theme */',isConnected:true,parentElement:{}};class Observer{constructor(cb){this.cb=cb;this.watches=[];this.disconnected=false;observer=this;}observe(...args){this.watches.push(args);}disconnect(){this.disconnected=true;}}
+ const lifecycle=ctx.create({script:{classList:{contains:()=>marketplace}},document:{querySelectorAll:()=>sheetPresent?[sheet]:[]},onDeactivate:()=>called++,Observer});return{sheet,lifecycle,get observer(){return observer;},get called(){return called;}};}
+test('manual install adds no Marketplace watcher',()=>{const s=setup({marketplace:false});assert.equal(s.observer,undefined);s.lifecycle.dispose();});
+test('Marketplace removal cleans up exactly once',()=>{const s=setup();assert.equal(s.observer.watches.length,2);s.observer.cb();assert.equal(s.called,0);s.sheet.isConnected=false;s.observer.cb();s.observer.cb();assert.equal(s.called,1);assert.equal(s.observer.disconnected,true);});
+test('replacing theme CSS deactivates while palette changes do not',()=>{const s=setup();s.sheet.textContent+=' :root {--spice-text:#fff}';s.observer.cb();assert.equal(s.called,0);s.sheet.textContent='/* Another theme */';s.observer.cb();assert.equal(s.called,1);});
+test('disposed watcher cannot deactivate a replacement runtime',()=>{const s=setup();s.lifecycle.dispose();s.sheet.isConnected=false;s.observer.cb();assert.equal(s.called,0);});
