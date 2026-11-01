@@ -4,6 +4,37 @@ An early-2010s Spotify desktop theme: graphite panels, silver controls, compact 
 
 ![Retrograde album view](preview.png)
 
+## A familiar desktop, made yours
+
+### Classic controls and compact tables
+
+Silver chrome, graphite surfaces, clear column headers and a compact playback bar bring the early Spotify desktop back into focus.
+
+![Album view with compact track tables and classic controls](docs/gallery/album.png)
+
+### Lyrics with room to breathe
+
+Centered native lyrics, a larger highlighted current line and a framed artwork card. Move the song information left or right in Preferences; the library rail and an open Queue keep their space.
+
+![Native lyrics with a framed artwork and album information card](docs/gallery/lyrics.png)
+
+### Keep the essentials close
+
+The Queue uses dense Track/Artist rows. Now Playing focuses on cover art, title, artists and About the artist. Both sidebars support resizing.
+
+<table>
+<tr><th>Classic Queue</th><th>Focused Now Playing</th></tr>
+<tr><td><img src="docs/gallery/queue.png" alt="Queue detail showing aligned Track and Artist columns" width="268"></td><td><img src="docs/gallery/now-playing.png" alt="Now Playing with artwork, track information and About the artist" width="299"></td></tr>
+</table>
+
+### Your palette, your preferences
+
+Start with one of ten curated schemes, then adjust colors, density, typography, track artwork, sidebar widths and motion. Changes preview immediately and save locally.
+
+![Retrograde Preferences with ten color presets and editable palette and layout controls](docs/gallery/preferences.png)
+
+All images are captures from the actual Windows Spotify client running Retrograde 1.0. Some views are cropped to emphasize a feature and omit personal library details and unrelated overlays.
+
 ## Features
 
 - Classic library rows and Track/Artist Queue tables.
@@ -21,7 +52,7 @@ Tested on **Windows, Spotify 1.3.6.1921 and Spicetify 2.46.4**. Other versions/p
 
 ### Spicetify Marketplace
 
-Once listed, search for **Retrograde** under Themes, install it and accept Marketplace's requested reload. The companion JavaScript is required for Preferences and layout features and is included by the manifest. Marketplace installation does not run the PowerShell installer.
+Search for **Retrograde** under Themes, install it and accept Marketplace's requested reload. The companion JavaScript is required for Preferences and layout features and is included by the manifest. Marketplace installation does not run the PowerShell installer.
 
 If Marketplace asks for its placeholder theme, follow its setup instructions first. Public distribution validation is tracked in [Marketplace publication](docs/MARKETPLACE.md).
 
