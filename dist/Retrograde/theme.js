@@ -115,6 +115,20 @@ function createRetrogradeFeatures({getSettings,setWidths,preferences,onPreferenc
   const originals=new Map();
   function override(e,k,v){if(!e)return;let props=originals.get(e);if(!props){props=new Map();originals.set(e,props);}if(!props.has(k))props.set(k,[e.style.getPropertyValue(k),e.style.getPropertyPriority(k)]);if(e.style.getPropertyValue(k)!==v)e.style.setProperty(k,v,'important');}
   const nativeSet=(k,v)=>{const api=storage();if(api?.getItem(k)!==v)api?.setItem(k,v);};
+  function playerArtwork(){
+    const bar=document.querySelector('[data-testid="now-playing-bar"]');
+    if(bar&&playerBar!==bar){playerImageObserver.disconnect();playerBar=bar;playerImageObserver.observe(bar,{childList:true,subtree:true,attributes:true,attributeFilter:['src']});}
+    const img=bar?.querySelector('[data-testid="cover-art-container"] img');
+    // Spotify supplies a 56px thumbnail for its original mini-widget. Its own
+    // CDN size variant keeps the enlarged native cover sharp without a fetch loop.
+    if(img&&img.src.includes('ab67616d000011eb')){
+      const sharp=img.src.replace('ab67616d000011eb','ab67616d0000b273')+' 640w';
+      if(img.srcset!==sharp)img.srcset=sharp;
+    }
+  }
+  let playerBar;
+  const playerImageObserver=new MutationObserver(playerArtwork);
+  signal.addEventListener('abort',()=>{playerImageObserver.disconnect();playerBar?.querySelector('[data-testid="cover-art-container"] img')?.removeAttribute('srcset');},{once:true});
   function schedule(flags=ALL){frames.add(flags);}
   // Virtualized list rows and native lyric lines need no theme JavaScript.
   // Only structural changes in the relevant surface trigger its adaptation.
@@ -145,7 +159,12 @@ function createRetrogradeFeatures({getSettings,setWidths,preferences,onPreferenc
     if(api&&lastLibraryStyle!==getSettings().libraryStyle){nativeSet('items-view',getSettings().libraryStyle==='classic'?2:0);lastLibraryStyle=getSettings().libraryStyle;}
     const path=Spicetify.Platform.History.location.pathname;mark(document.documentElement,'data-retrograde-page',path==='/'?'home':path.includes('lyrics')?'lyrics':'content');
     mark(left,'data-rp-collapsed',String(!!left.querySelector('.main-yourLibraryX-headerIsCollapsed')));
-    // Current-track details live in Spotify's native playback bar.
+    // Size the native player's artwork dock from the actual library geometry.
+    // CSS repositions the existing widget; React ownership and menus are retained.
+    const docked=!left.querySelector('.main-yourLibraryX-headerIsCollapsed')&&(geometry.rects.left?.width||0)>=180;
+    mark(document.documentElement,'data-rp-player-docked',String(docked));
+    override(document.documentElement,'--rp-player-library-width',Math.round(geometry.rects.left?.width||300)+'px');
+    // Remove the older generated duplicate; the native widget is the dock.
     nav.querySelector('.rp-library-dock')?.remove();
     mark(left,'data-rp-narrow',String((geometry.rects.left?.width||0)<320));
     const panel=document.querySelector('#Desktop_PanelContainer_Id');if(panel)mark(panel,'data-rp-narrow',String((geometry.rects.panel?.width||0)<330));
@@ -249,7 +268,7 @@ function createRetrogradeFeatures({getSettings,setWidths,preferences,onPreferenc
     if(flags&PANEL){simplifyPanel();stats.passes.panel++;}
     if(flags&ARTIST){artistTables();stats.passes.artist++;}
     if(flags&QUEUE){queueTables();stats.passes.queue++;}
-    if(flags&MEDIA){lyrics.update();stats.passes.media++;}
+    if(flags&MEDIA){lyrics.update();playerArtwork();stats.passes.media++;}
     if(flags&LAYOUT)positionHandles(geometry);
     if(flags&CHROME){chrome.update();stats.passes.chrome++;}
   }finally{stats.syncs++;stats.lastMs=performance.now()-started;stats.totalMs+=stats.lastMs;stats.maxMs=Math.max(stats.maxMs,stats.lastMs);observe();}}
