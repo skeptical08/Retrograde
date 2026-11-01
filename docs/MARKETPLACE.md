@@ -17,8 +17,17 @@ The repository root contains manifest.json and preview.png. The manifest points 
 
 The topic is the discovery mechanism, not an approval or compatibility certification. GitHub search/indexing, Marketplace caching and rate limits may delay visibility.
 
-## Current validation status
+## Publication and validation status — 2026-11-01
 
-The local build, syntax, preference/runtime tests and Marketplace stylesheet-removal tests pass. The manual-install path has been exercised in Spotify. Public GitHub Pages delivery and an actual Marketplace install/switch/reinstall remain pending until the repository is published. Do not describe these pending checks as passed.
+- Public repository: https://github.com/skeptical08/Retrograde
+- Release: https://github.com/skeptical08/Retrograde/releases/tag/v1.0.0
+- Required spicetify-themes topic is configured and Retrograde appeared in the installed Marketplace 1.0.12 Themes search under skeptical08.
+- GitHub Pages serves the companion script as application/javascript over HTTPS; its SHA-256 matches the released file.
+- GitHub CI passed build, all 17 tests, manifest validation and generated-file reproducibility. A fresh public clone also passed locally.
+- Installed Retrograde from its actual Marketplace card and completed the requested reload. The theme loaded and Preferences opened with Retrograde 1.0 branding and retained local settings.
+- The companion cleanup is covered by automated tests. Additional live uninstall/reinstall and full restart checks were not exercised in this publication check.
+- The README includes five real-client feature captures: album tables, lyrics, Queue, Now Playing and Preferences. Public crops omit personal library text and unrelated overlays.
+
+The theme is published and discoverable. This is not a compatibility certification for other Spotify/Spicetify versions or platforms.
 
 Official reference: https://github.com/spicetify/marketplace/wiki/Publishing-to-Marketplace
