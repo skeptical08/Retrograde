@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 104">
+  <defs><linearGradient id="green" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#b3d43d"/><stop offset=".55" stop-color="#8cba00"/><stop offset="1" stop-color="#6b9800"/></linearGradient><clipPath id="orb"><circle cx="50" cy="50" r="47"/></clipPath><radialGradient id="shine" cx=".2" cy=".1" r="1"><stop stop-color="#e2ef8c" stop-opacity=".5"/><stop offset="1" stop-color="#e2ef8c" stop-opacity="0"/></radialGradient></defs>
+  <ellipse cx="50" cy="55" rx="47" ry="47" fill="#000" opacity=".3"/>
+  <circle cx="50" cy="50" r="47" fill="url(#green)"/>
+  <g clip-path="url(#orb)"><path d="M-5 93 Q28 60 62 67 Q90 74 105 107 L-5 107Z" fill="#163b00"/><path d="M16 29 Q47 20 82 35" fill="none" stroke="#254c00" stroke-width="9" stroke-linecap="round"/><path d="M19 46 Q48 37 75 49" fill="none" stroke="#2d5600" stroke-width="7" stroke-linecap="round"/><path d="M20 61 Q43 56 66 64" fill="none" stroke="#426c00" stroke-width="6" stroke-linecap="round"/><path d="M-5 10 Q40-8 99 35 Q52 12-4 66Z" fill="url(#shine)"/><path d="M35 101 Q52 83 74 98 L75 110H35Z" fill="#8bb700"/></g>
+</svg>

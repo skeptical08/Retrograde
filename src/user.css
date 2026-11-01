@@ -1,0 +1,616 @@
+/* Retrograde — an original 2011-inspired skin for the native Spotify desktop UI.
+   Semantic IDs/test hooks first. No row-height overrides on virtualized lists. */
+:root {
+  --rp-accent:#a4cc35; --rp-sidebar:#414141; --rp-menu:#424242;
+  --rp-main:#303030; --rp-player:#505050; --rp-text:#eeeeee;
+  --rp-secondary:#c2c2c2; --rp-selection:#526c82; --rp-hover:#505050;
+  --rp-font-size:13px; --rp-accent-ink:#171717;
+  --rp-chrome-top:#bcbcbc; --rp-chrome-bottom:#828282;
+  --rp-relief:linear-gradient(#ffffff16,#00000014);
+}
+html[data-retrograde-relief="strong"] { --rp-chrome-top:#e0e0e0; --rp-chrome-bottom:#777; --rp-relief:linear-gradient(#ffffff2c,#00000030); }
+html[data-retrograde] {
+  --spice-main:var(--rp-main); --spice-sidebar:var(--rp-sidebar); --spice-player:var(--rp-player);
+  --spice-text:var(--rp-text); --spice-subtext:var(--rp-secondary); --spice-button:var(--rp-accent);
+  --spice-button-active:var(--rp-accent); --spice-notification:var(--rp-accent);
+  --encore-body-font-stack:"Segoe UI",Tahoma,sans-serif;
+  --encore-title-font-stack:"Segoe UI",Tahoma,sans-serif;
+  --encore-variable-font-stack:"Segoe UI",Tahoma,sans-serif;
+}
+html[data-retrograde] :is(.encore-dark-theme,.encore-base-set,.encore-layout-themes) {
+  --background-base:var(--rp-main); --background-elevated-base:var(--rp-menu);
+  --background-elevated-highlight:var(--rp-hover); --background-elevated-press:var(--rp-selection);
+  --background-highlight:var(--rp-hover); --background-press:var(--rp-selection);
+  --text-base:var(--rp-text); --text-subdued:var(--rp-secondary); --text-bright-accent:var(--rp-accent);
+  --essential-base:var(--rp-secondary); --essential-bright-accent:var(--rp-accent);
+  --encore-corner-radius-base:2px; --encore-corner-radius-smaller:2px;
+  --encore-corner-radius-larger:2px; --encore-corner-radius-larger-2:2px;
+  --encore-corner-radius-larger-3:2px;
+}
+html[data-retrograde] .encore-bright-accent-set { --background-base:var(--rp-accent); --background-highlight:color-mix(in srgb,var(--rp-accent),white 15%); --background-press:var(--rp-accent); --text-base:var(--rp-accent-ink); --essential-base:var(--rp-accent-ink); }
+html[data-retrograde] body { background:var(--rp-main); color:var(--rp-text); }
+html[data-retrograde] :is(button,input,select,textarea) { font-family:"Segoe UI",Tahoma,sans-serif; }
+html[data-retrograde] :is(.encore-text-body-medium,.encore-text-body-medium-bold) { font-size:var(--rp-font-size); }
+html[data-retrograde] :is(.encore-text-body-small,.encore-text-body-small-bold) { font-size:calc(var(--rp-font-size) - 1px); }
+html[data-retrograde] :is(.encore-text-marginal,.encore-text-marginal-bold) { font-size:max(11px,calc(var(--rp-font-size) - 2px)); }
+html[data-retrograde] :is(button,a,input,select,[tabindex]):focus-visible { outline:2px solid var(--rp-accent); outline-offset:2px; }
+html[data-retrograde] button:disabled { opacity:.42; }
+html[data-retrograde] button:hover { transform:none; }
+html[data-retrograde] .Root__top-container { padding:0; gap:1px; background:#202020; --panel-gap:0px; }
+html[data-retrograde] :is(#main-view,.main-view-container,#Desktop_LeftSidebar_Id,.YourLibraryX,[data-testid="right-sidebar"]) { border-radius:0; }
+html[data-retrograde] #main-view { background:var(--rp-main); }
+html[data-retrograde] #Desktop_LeftSidebar_Id { background:var(--rp-sidebar); border-right:1px solid #191919; }
+html[data-retrograde] #Desktop_LeftSidebar_Id :is(nav,.YourLibraryX) { background:var(--rp-sidebar); border-radius:0; }
+html[data-retrograde] .Root__globalNav {
+  background:linear-gradient(var(--rp-chrome-top),var(--rp-chrome-bottom));
+  border-bottom:1px solid #222; box-shadow:inset 0 1px #ffffff60;
+}
+html[data-retrograde] .Root__globalNav :is(.main-globalNav-navLink,.main-actionButtons-button,.main-globalNav-historyButtonsWrapper button,#retrograde-settings-button) { color:#292929; }
+html[data-retrograde] .Root__globalNav :is(.main-globalNav-navLink,#retrograde-settings-button) {
+  background:linear-gradient(#ffffff20,#00000012); border:1px solid #686868;
+  box-shadow:inset 0 1px #ffffff65,0 1px #ffffff30; border-radius:4px;
+}
+html[data-retrograde] .Root__globalNav :is(.main-globalNav-navLink,#retrograde-settings-button):hover { background:#ffffff40; }
+html[data-retrograde] .Root__globalNav :is(.main-globalNav-navLink,#retrograde-settings-button):active { box-shadow:inset 0 2px 3px #0005; }
+html[data-retrograde] .Root__globalNav .main-globalNav-navLinkActive { color:var(--rp-accent-ink); background:linear-gradient(color-mix(in srgb,var(--rp-accent),white 40%),var(--rp-accent)); }
+html[data-retrograde] .Root__globalNav input[data-top-bar-search] { background:#f2f2ee; color:#242424; box-shadow:inset 0 1px 3px #0006; border:1px solid #666; border-radius:5px; }
+html[data-retrograde] .Root__globalNav input[data-top-bar-search]::placeholder { color:#555; }
+/* Spotify overlays a decorative placeholder on the actual search input. */
+html[data-retrograde] .Root__globalNav form[role="search"] { color:#333; }
+html[data-retrograde] .Root__globalNav input[data-top-bar-search] + [aria-hidden="true"] { color:#555; --text-base:#555; --text-subdued:#555; }
+html[data-retrograde] #search-dropdown { background:var(--rp-menu); color:var(--rp-text); --text-base:var(--rp-text); --text-subdued:var(--rp-secondary); }
+html[data-retrograde] .Root__globalNav form[role="search"] button { color:#333; }
+html[data-retrograde] .main-yourLibraryX-header { background:var(--rp-relief),var(--rp-sidebar); border-bottom:1px solid #202020; box-shadow:inset 0 1px #ffffff22; }
+html[data-retrograde] .main-yourLibraryX-header h1 { font-size:14px; }
+html[data-retrograde] .main-yourLibraryX-libraryRootlist [role="row"][draggable] { border-radius:0; box-shadow:inset 0 -1px #00000030; }
+html[data-retrograde] .main-yourLibraryX-libraryRootlist [role="row"][draggable]:hover { background:var(--rp-hover); }
+html[data-retrograde] .main-yourLibraryX-libraryRootlist [role="row"][aria-selected="true"] { background:var(--rp-selection); }
+html[data-retrograde] .main-yourLibraryX-libraryRootlist img { border-radius:1px; box-shadow:0 1px 3px #0006; }
+html[data-retrograde] :is([data-testid="component-shelf"],.main-shelf-shelf) { margin-bottom:16px; }
+html[data-retrograde] :is([data-testid="component-shelf"],.main-shelf-shelf) > :first-child:has(h2) { background:var(--rp-relief),color-mix(in srgb,var(--rp-main),white 12%); border-top:1px solid #ffffff18; border-bottom:1px solid #0008; padding:0 12px; }
+html[data-retrograde] :is([data-testid="component-shelf"],.main-shelf-shelf) h2 { font-size:15px; line-height:1.5; text-shadow:0 1px #0008; }
+html[data-retrograde] [data-testid="component-shelf"] > :first-child [data-encore-id="listRow"] { --box-min-block-size:34px !important; }
+html[data-retrograde] [data-encore-id="card"] { border-radius:2px; }
+html[data-retrograde] [data-encore-id="card"] img { border-radius:1px; box-shadow:0 2px 5px #0007; }
+html[data-retrograde] [data-encore-id="card"]:hover { background:var(--rp-hover); box-shadow:inset 0 0 0 1px #ffffff0b; }
+html[data-retrograde] .main-view-container__scroll-node-child { background:var(--rp-main); }
+html[data-retrograde] :is(.main-entityHeader-backgroundColor,.main-entityHeader-background,.main-actionBarBackground-background) { background:var(--rp-relief),var(--rp-main) !important; }
+html[data-retrograde] .main-entityHeader-container { background-color:var(--rp-main); min-height:180px; }
+html[data-retrograde] .main-entityHeader-withoutBackgroundImage { background:var(--rp-relief),var(--rp-main); }
+html[data-retrograde] .main-entityHeader-withBackgroundImage { height:clamp(260px,36vh,420px); min-height:260px; background-color:transparent; }
+html[data-retrograde] [data-encore-id="adaptiveTitle"] { font-size:clamp(28px,3.5vw,48px) !important; font-weight:600 !important; line-height:1.15; text-shadow:0 2px 3px #0009; }
+html[data-retrograde] .main-entityHeader-headerText h1 { font-size:clamp(24px,3.5vw,48px) !important; letter-spacing:-.8px; text-shadow:0 2px 2px #0008; }
+html[data-retrograde] .main-entityHeader-image { border-radius:0; box-shadow:0 3px 8px #0007; }
+html[data-retrograde] [data-encore-id="buttonPrimary"] > .encore-bright-accent-set { background:var(--rp-relief),var(--rp-accent); border:1px solid #24320e; box-shadow:inset 0 1px #ffffff65,0 1px 2px #0006; }
+html[data-retrograde] [data-encore-id="buttonSecondary"] { border-radius:4px; background:var(--rp-relief),var(--rp-hover); border:1px solid #222; box-shadow:inset 0 1px #ffffff35; }
+html[data-retrograde] .playlist-playlist-mixingBackground { background:var(--rp-relief),var(--rp-main) !important; }
+html[data-retrograde] .main-topBar-background { background:var(--rp-relief),var(--rp-menu) !important; border-radius:0; }
+/* Native artwork-derived layer behind the playlist toolbar (1.3.6). */
+html[data-retrograde] [data-testid="playlist-page"] [style*="--background-base-70"] { --background-base-70:transparent !important; --text-base:var(--rp-text) !important; --text-subdued:var(--rp-secondary) !important; --text-bright-accent:var(--rp-accent) !important; }
+html[data-retrograde] [data-testid="action-bar"] { background:var(--rp-relief),var(--rp-main); border-bottom:1px solid #222; }
+/* 1.3.6 compatibility: the track grid no longer exposes main-trackList classes.
+   Semantic roles + its inline row-height token distinguish it from shelf grids. */
+html[data-retrograde] #main-view [role="grid"][style*="--row-height"] [role="row"]:has(> [role="columnheader"]) { background:linear-gradient(var(--rp-chrome-top),var(--rp-chrome-bottom)); color:#202020; border-top:1px solid #ffffff60; border-bottom:1px solid #181818; }
+html[data-retrograde] #main-view [role="columnheader"] { color:#202020; border-right:1px solid #0003; text-shadow:0 1px #ffffff55; }
+html[data-retrograde] #main-view [role="columnheader"] button { color:inherit; }
+html[data-retrograde] #main-view [role="grid"][style*="--row-height"] [role="row"][aria-selected] > [draggable] { border-radius:0; border-bottom:1px solid #ffffff06; }
+html[data-retrograde] #main-view [role="grid"][style*="--row-height"] [role="row"][aria-selected]:nth-child(even) > [draggable] { background:color-mix(in srgb,var(--rp-main),white 3%); }
+html[data-retrograde] #main-view [role="grid"][style*="--row-height"] [role="row"][aria-selected]:hover > [draggable] { background:var(--rp-hover); }
+html[data-retrograde] #main-view [role="grid"][style*="--row-height"] [role="row"][aria-selected="true"] > [draggable] { background:var(--rp-selection); }
+html[data-retrograde] #main-view [role="grid"][style*="--row-height"] img { border-radius:1px !important; }
+html[data-retrograde] .main-trackList-trackListHeader { background:linear-gradient(var(--rp-chrome-top),var(--rp-chrome-bottom)) !important; border-top:1px solid #ffffff65; border-bottom:1px solid #181818; color:#202020; }
+html[data-retrograde] .main-trackList-trackListHeaderRow { color:#202020; min-height:28px; height:28px; text-shadow:0 1px #ffffff65; }
+html[data-retrograde] .main-trackList-trackListHeaderRow > div { border-right:1px solid #0002; }
+html[data-retrograde] .main-trackList-trackListRow { border-radius:0; border-bottom:1px solid #00000018; }
+html[data-retrograde] [data-testid="tracklist-row"]:nth-child(even) { background:color-mix(in srgb,var(--rp-main),white 3%); }
+html[data-retrograde] .main-trackList-trackListRow:hover { background:var(--rp-hover) !important; }
+html[data-retrograde] .main-trackList-trackListRow[aria-selected="true"] { background:var(--rp-selection) !important; box-shadow:inset 0 1px #ffffff20,inset 0 -1px #0004; }
+html[data-retrograde] .main-trackList-rowImage { border-radius:1px; }
+/* Density is set via Spotify's native local view-mode preference by theme.js.
+   Never override the virtualizer's fixed row heights, transforms, or spacers. */
+html[data-retrograde] [data-testid="now-playing-bar"] { background:var(--rp-relief),var(--rp-player); border-top:1px solid #8d8d8d; box-shadow:0 -1px #1a1a1a; }
+html[data-retrograde] .main-nowPlayingBar-nowPlayingBar { background:transparent; }
+html[data-retrograde] [data-testid="now-playing-bar"] img { border-radius:1px; border:1px solid #222; }
+html[data-retrograde] [data-testid="control-button-playpause"] > span { background:linear-gradient(#e0e0e0,#969696); color:#222; border:1px solid #303030; box-shadow:inset 0 1px #fff8,0 1px 2px #0006; }
+html[data-retrograde] [data-testid="control-button-playpause"]:active > span { background:linear-gradient(#888,#c9c9c9); }
+html[data-retrograde] .progress-bar { --progress-bar-height:6px; --fg-color:var(--rp-accent); }
+html[data-retrograde] .x-progressBar-progressBarBg { background:#292929; box-shadow:inset 0 1px 2px #0009,0 1px #ffffff30; }
+html[data-retrograde] .x-progressBar-fillColor { background:linear-gradient(color-mix(in srgb,var(--rp-accent),white 25%),var(--rp-accent)); }
+html[data-retrograde] .progress-bar__slider { background:#d3d3d3; border:1px solid #555; box-shadow:0 1px 3px #0008; }
+html[data-retrograde] :is([role="menu"],#context-menu .main-contextMenu-menu,.main-contextMenu-tippy) { background:var(--rp-menu); color:var(--rp-text); border:1px solid #202020; border-radius:3px; box-shadow:inset 0 1px #ffffff24,0 5px 18px #0007; }
+html[data-retrograde] [role="menuitem"]:is(:hover,:focus) { background:var(--rp-selection); }
+html[data-retrograde] :is(.GenericModal,.main-trackCreditsModal-container) { background:var(--rp-menu); color:var(--rp-text); border-radius:4px; border:1px solid #777; }
+html[data-retrograde] [data-testid="right-sidebar"] { background:var(--rp-sidebar); border-left:1px solid #191919; }
+html[data-retrograde] #Desktop_PanelContainer_Id { background:var(--rp-sidebar); border-left:1px solid #191919; border-radius:0; }
+html[data-retrograde] #Desktop_PanelContainer_Id [data-npv-root] { background-color:var(--rp-sidebar); }
+html[data-retrograde] :is(.main-nowPlayingView-headerWrapper,[data-testid="PanelHeader"]) { background:var(--rp-relief),var(--rp-sidebar); border-bottom:1px solid #222; }
+html[data-retrograde] ::-webkit-scrollbar { width:10px; height:10px; }
+html[data-retrograde] ::-webkit-scrollbar-thumb { background:linear-gradient(90deg,#888,#aaa); border:2px solid var(--rp-main); border-radius:6px; }
+html[data-retrograde] .os-scrollbar-handle { background:#939393 !important; border:1px solid #444; }
+html[data-retrograde-motion="true"] :is(#main-view,#Desktop_LeftSidebar_Id,[data-testid="now-playing-bar"],.rp-settings) *,
+html[data-retrograde-motion="true"] .Root__globalNav * { transition-duration:.01ms !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
+@media(prefers-reduced-motion:reduce) { html[data-retrograde] * { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; } }
+/* Self-contained native dialog, with browser focus containment and Escape support. */
+.rp-settings { box-sizing:border-box; width:min(760px,calc(100vw - 40px)); max-height:calc(100vh - 48px); margin:auto; padding:0; background:var(--rp-menu); color:var(--rp-text); border:1px solid #888; border-radius:5px; box-shadow:0 18px 80px #000a,inset 0 1px #fff3; font:13px/1.5 "Segoe UI",Tahoma,sans-serif; overflow:auto; }
+.rp-settings::backdrop { background:#0009; }
+.rp-settings * { box-sizing:border-box; }
+.rp-settings-header { display:flex; align-items:center; justify-content:space-between; padding:22px 26px 14px; background:var(--rp-relief); border-bottom:1px solid #0006; }
+.rp-eyebrow { color:var(--rp-accent); font-size:10px; letter-spacing:2px; font-weight:700; margin-bottom:5px; }
+.rp-settings h2 { font-size:25px; line-height:1.25; font-weight:600; letter-spacing:-.5px; margin:0; }
+.rp-settings .rp-close { font-size:25px; width:32px; height:32px; padding:0; }
+.rp-settings .rp-intro { padding:16px 26px 0; margin:0; color:var(--rp-secondary); max-width:650px; }
+.rp-settings-body { padding:18px 26px; }
+.rp-settings h3 { margin:0 0 10px; font-size:12px; font-weight:600; }
+.rp-presets { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px; }
+.rp-settings button { color:var(--rp-text); font-size:12px; font-weight:600; background:var(--rp-relief),var(--rp-hover); border:1px solid #202020; border-radius:3px; box-shadow:inset 0 1px #ffffff25,0 1px #ffffff0d; cursor:pointer; padding:7px 12px; }
+.rp-settings button:hover { filter:brightness(1.13); }
+.rp-settings button:active { box-shadow:inset 0 2px 3px #0006; }
+.rp-preset { display:flex; gap:7px; align-items:center; }
+.rp-preset span { width:10px; height:10px; border-radius:50%; box-shadow:0 0 0 1px #0004; }
+.rp-settings-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:24px; }
+.rp-settings fieldset { border:0; padding:0; margin:0; min-width:0; }
+.rp-settings legend { width:100%; padding:0 0 8px; margin-bottom:5px; border-bottom:1px solid #ffffff25; font-weight:600; font-size:13px; }
+.rp-color-row { display:grid; grid-template-columns:1fr 28px 82px; align-items:center; gap:8px; min-height:34px; }
+.rp-settings label { color:var(--rp-secondary); font-size:12px; }
+.rp-settings input:not([type="checkbox"]),.rp-settings select { background:#242424; color:#eee; border:1px solid #191919; border-radius:3px; box-shadow:inset 0 1px 2px #0006,0 1px #fff1; padding:5px 7px; font-size:12px; min-width:0; }
+.rp-settings input[type="color"] { padding:2px; width:28px; height:26px; cursor:pointer; }
+.rp-settings input[type="text"] { width:82px; font-family:Consolas,monospace; }
+.rp-settings input[aria-invalid="true"] { outline:2px solid #ff947f; }
+.rp-settings input[type="number"] { width:65px; }
+.rp-settings input[type="checkbox"] { accent-color:var(--rp-accent); width:16px; height:16px; }
+.rp-option { display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:43px; }
+.rp-density-note { margin:0 0 8px; color:var(--rp-secondary); font-size:10px; }
+.rp-settings select { max-width:135px; }
+.rp-status { font-size:11px; color:var(--rp-secondary); padding:10px 12px; margin:18px 0 0; background:#0002; border-left:2px solid var(--rp-accent); }
+.rp-status[data-warning="true"] { border-left-color:#efbd66; }
+.rp-settings-footer { display:flex; align-items:center; justify-content:space-between; gap:10px; background:#0002; padding:14px 26px; border-top:1px solid #ffffff18; }
+.rp-settings-footer > span { font-size:10px; color:var(--rp-secondary); }
+.rp-settings .rp-primary { background:var(--rp-relief),var(--rp-accent); color:var(--rp-accent-ink); min-width:75px; }
+@media(max-width:650px) { .rp-settings-grid { grid-template-columns:1fr; gap:18px; } .rp-settings-footer > span { display:none; } .rp-settings-header,.rp-settings-body { padding:16px; } .rp-settings .rp-intro { padding:12px 16px 0; } }
+
+/* 1.1 — Throwback-style chrome and complete 1.3.6 layout compatibility. */
+html[data-retrograde] .Root__top-container { column-gap:4px; row-gap:0; }
+html[data-retrograde] .Root__globalNav { box-sizing:border-box; height:74px; min-height:74px; padding:10px 12px; align-items:center; }
+html[data-retrograde] .Root__globalNav > div { align-items:center; }
+html[data-retrograde] .main-globalNav-historyButtonsWrapper { display:flex; align-items:center; height:100%; gap:8px; }
+html[data-retrograde] .Root__globalNav .spicetify-topbar-button { display:flex; align-items:center; justify-content:center; width:42px; height:44px; flex:0 0 42px; background:none; border:0; box-shadow:none; }
+html[data-retrograde] .Root__globalNav :is(.main-globalNav-navLink,#retrograde-settings-button > button) { box-sizing:border-box; width:44px; height:44px; min-width:44px; min-height:44px; padding:0; border-radius:50%; background:linear-gradient(#e3e3e3 0%,#bcbcbc 48%,#929292 100%); border:1px solid #666; color:#333; box-shadow:inset 0 1px #fffa,0 1px #ffffff35; }
+html[data-retrograde] .Root__globalNav :is(.main-globalNav-navLink,#retrograde-settings-button > button):hover { background:linear-gradient(#f2f2f2,#aaa); }
+html[data-retrograde] .Root__globalNav :is(.main-globalNav-navLink,#retrograde-settings-button > button):active { background:linear-gradient(#929292,#c4c4c4); box-shadow:inset 0 2px 3px #0004; }
+html[data-retrograde] .Root__globalNav .main-globalNav-navLinkActive { color:#333; }
+html[data-retrograde] #retrograde-settings-button > button > svg { width:22px; height:22px; }
+html[data-retrograde] .Root__globalNav input[data-top-bar-search] { height:46px; border-radius:8px; color:#e5e5e5; background:#252525; border:1px solid #4d4d4d; box-shadow:inset 0 2px 3px #0008,0 1px #ffffff70; }
+html[data-retrograde] .Root__globalNav input[data-top-bar-search]::placeholder { color:#ccc; }
+html[data-retrograde] .Root__globalNav input[data-top-bar-search] + [aria-hidden="true"] { color:#ccc; --text-base:#ccc; --text-subdued:#ccc; }
+html[data-retrograde] .Root__globalNav form[role="search"] { color:#ccc; }
+html[data-retrograde] .Root__globalNav form[role="search"] button { color:#ccc; }
+html[data-retrograde] .main-yourLibraryX-header { padding-block:12px; background:linear-gradient(#777,#5b5b5b); }
+html[data-retrograde] .main-yourLibraryX-header button { border-radius:6px; background:linear-gradient(#d7d7d7,#929292); color:#292929; border:1px solid #454545; box-shadow:inset 0 1px #ffffff9a,0 1px #ffffff18; }
+html[data-retrograde] .main-yourLibraryX-header button svg { filter:drop-shadow(0 1px #fff8); }
+html[data-retrograde] #Desktop_LeftSidebar_Id [data-encore-id="chip"] { border:1px solid #333; border-radius:3px; background:linear-gradient(#626262,#454545); color:var(--rp-text); }
+html[data-retrograde] [data-testid="buttonPrimary"] { transform:none; }
+html[data-retrograde] [data-encore-id="buttonPrimary"] > .encore-bright-accent-set { color:#222; --text-base:#222; --essential-base:#222; background:linear-gradient(#dedede,#bababa 45%,#8e8e8e); border:1px solid #484848; box-shadow:inset 0 1px #fffa,0 1px 2px #0006; }
+html[data-retrograde] [data-encore-id="buttonPrimary"]:active > .encore-bright-accent-set { background:linear-gradient(#929292,#cacaca); }
+html[data-retrograde] [data-testid="watch-feed-entity-button"] { display:none !important; }
+html[data-retrograde] .main-entityHeader-metaDataText { color:var(--rp-secondary) !important; }
+html[data-retrograde] .main-entityHeader-metaDataText :is(span,p,div) { color:inherit !important; --text-subdued:var(--rp-secondary) !important; }
+html[data-retrograde] .main-entityHeader-metaDataText a { color:var(--rp-text) !important; }
+html[data-retrograde] #main-view [role="columnheader"] svg { fill:#353535 !important; color:#353535 !important; --encore-icon-fill:#353535 !important; }
+html[data-retrograde] [role="menu"] :is([role="menuitemradio"],[role="menuitemcheckbox"]) { color:var(--rp-text); --text-bright-accent:var(--rp-text); --essential-bright-accent:var(--rp-text); }
+html[data-retrograde] [role="menu"] :is([role="menuitemradio"],[role="menuitemcheckbox"]) svg { color:var(--rp-secondary); --encore-icon-fill:var(--rp-secondary) !important; }
+html[data-retrograde] [data-testid="action-bar"] [role="combobox"] { color:#292929; background:linear-gradient(#cecece,#909090); border:1px solid #333; border-radius:4px; box-shadow:inset 0 1px #ffffff85; padding:5px 9px; }
+html[data-retrograde] [data-testid="action-bar"] [role="combobox"] svg { color:#353535; --encore-icon-fill:#353535 !important; }
+/* Artist banners are native background layers behind the scrolling content. */
+html[data-retrograde] .main-view-container:has([data-testid="artist-page"]) .main-view-container__scroll-node-child { background:transparent; }
+html[data-retrograde] [data-testid="artist-page"] .main-entityHeader-withBackgroundImage { background:transparent; }
+html[data-retrograde] [data-testid="artist-page"] [data-testid="entity-header"] { text-shadow:0 2px 4px #000b; }
+html[data-retrograde] [data-testid="artist-page"] [data-testid="entity-header"] :is([data-encore-id="adaptiveTitle"],.main-entityHeader-detailsText) { color:#fff; }
+/* Hide thumbnails everywhere by default, including artist Popular tables. */
+html[data-retrograde-track-artwork="false"] #main-view [role="grid"][style*="--row-height"] [role="gridcell"] > img { display:none !important; }
+html[data-retrograde] { --rp-artist-row-height:56px; }
+html[data-retrograde-density="compact"][data-retrograde-track-artwork="false"] { --rp-artist-row-height:32px; }
+html[data-retrograde] [data-rp-static-tracks] { --row-height:var(--rp-artist-row-height) !important; }
+html[data-retrograde] [data-rp-static-wrap] { height:auto !important; }
+html[data-retrograde] [data-rp-static-wrap] > :not(:has(> [role="row"])) { display:none !important; }
+html[data-retrograde] [data-rp-static-wrap] > :has(> [role="row"]) { transform:none !important; position:relative !important; }
+html[data-retrograde-density="compact"][data-retrograde-track-artwork="false"] [data-rp-static-tracks] [role="gridcell"][aria-colindex="2"] > div { display:flex; align-items:center; gap:6px; min-width:0; }
+html[data-retrograde-density="compact"][data-retrograde-track-artwork="false"] [data-rp-static-tracks] [role="gridcell"][aria-colindex="2"] > div > span:last-child:has(a[href^="/artist/"]) { display:none; }
+html[data-retrograde] .rp-artist-tablehead { display:grid; align-items:center; height:30px; color:#292929; background:linear-gradient(var(--rp-chrome-top),var(--rp-chrome-bottom)); border-top:1px solid #ffffff70; border-bottom:1px solid #222; font-size:12px; text-shadow:0 1px #ffffff65; }
+html[data-retrograde] .rp-artist-tablehead span { border-right:1px solid #0003; min-width:0; }
+/* Dedicated resize dividers with pointer and keyboard support. */
+.rp-sidebar-resizer { position:fixed; z-index:100; width:8px; cursor:col-resize; touch-action:none; outline:none; }
+.rp-sidebar-resizer::after { content:""; position:absolute; top:0; bottom:0; left:3px; width:2px; background:#161616; box-shadow:1px 0 #7775; transition:background .12s; }
+.rp-sidebar-resizer:hover::after,.rp-sidebar-resizer:focus-visible::after { width:3px; background:var(--rp-accent); }
+.rp-sidebar-resizer[hidden] { display:none; }
+html[data-retrograde-resizing] * { cursor:col-resize !important; user-select:none !important; }
+/* Minimal now-playing view: our album cover/title/artist links + native About. */
+[data-rp-npv-hidden] { display:none !important; }
+html[data-retrograde] [data-rp-npv-content],html[data-retrograde] [data-rp-npv-path] { padding:0 !important; margin:0 !important; gap:0 !important; background:transparent !important; }
+html[data-retrograde] [data-rp-npv-toolbar] { background:linear-gradient(#626262,#444); border-bottom:1px solid #242424; box-shadow:inset 0 1px #ffffff28; min-height:46px; }
+.rp-npv-label { color:var(--rp-text); font-size:13px; font-weight:600; }
+.rp-track-summary { margin:0; padding:0; }
+.rp-now-cover { display:block; width:100%; background:#242424; }
+.rp-now-cover img { display:block; width:100%; aspect-ratio:1; object-fit:cover; border-radius:0; }
+.rp-cover-placeholder { aspect-ratio:1; display:grid; place-items:center; font:80px Georgia,serif; color:#777; background:#292929; }
+.rp-now-info { padding:14px 16px 15px; background:linear-gradient(#4c4c4c,var(--rp-main)); border-top:1px solid #777; border-bottom:1px solid #222; }
+.rp-now-info h2 { margin:0 0 2px; font:600 21px/1.25 "Segoe UI",sans-serif; color:var(--rp-text); overflow-wrap:anywhere; text-shadow:0 2px 2px #0007; }
+.rp-now-artists { color:var(--rp-secondary); font-size:13px; line-height:1.5; }
+.rp-now-info a { color:inherit; text-decoration:none; }
+.rp-now-info a:hover { text-decoration:underline; }
+html[data-retrograde] [data-rp-about-card] { margin:0 !important; border-radius:0 !important; background:var(--rp-main); }
+html[data-retrograde] [data-rp-about-card] > div { border-radius:0; }
+html[data-retrograde] [data-rp-about-card] [style*="background-image"] { border-radius:0; min-height:210px; background-position:center; }
+/* The fully rendered Popular wrapper uses size containment for virtualization.
+   Its height must follow the five/ten compact rows rather than collapse to zero. */
+html[data-retrograde] [data-rp-static-wrap] { contain:none !important; }
+/* 1.3.6 renamed the old metadata text hook; scope the current small text to
+   the native entity header rather than inheriting artwork-derived pink. */
+html[data-retrograde] .main-entityHeader-headerText :is(.encore-text-body-small,.encore-text-body-small *) { color:var(--rp-secondary) !important; --text-subdued:var(--rp-secondary) !important; }
+html[data-retrograde] [role="dialog"] { background-color:var(--rp-menu); border:1px solid #222; border-radius:4px; box-shadow:inset 0 1px #ffffff25,0 12px 40px #0009; }
+/* Spotify overlays its header over the scrolling viewport. Reserve its measured
+   height so the top of the square cover remains visible. */
+html[data-retrograde] [data-rp-npv-content] { padding-top:var(--rp-npv-toolbar-height,64px) !important; }
+/* Native Queue/Recently played tabs and section bars follow Throwback chrome.
+   Row heights remain native so queue virtualization stays correct. */
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] { background:var(--rp-sidebar); }
+html[data-retrograde] #Desktop_PanelContainer_Id [role="tab"] { color:#292929; background:linear-gradient(#c9c9c9,#939393); border:1px solid #242424; border-radius:4px 4px 0 0; padding:10px 12px; box-shadow:inset 0 1px #fff8; }
+html[data-retrograde] #Desktop_PanelContainer_Id [role="tab"][aria-selected="true"] { background:linear-gradient(#b8b8b8,#818181); }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] h2 { background:linear-gradient(#666,#484848); padding:8px 10px; margin:0 0 8px; border-top:1px solid #ffffff30; border-bottom:1px solid #222; color:var(--rp-text); }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] [role="row"] { border-bottom:1px solid #ffffff15; border-radius:0; }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] [role="row"] img { border-radius:0; box-shadow:0 1px 3px #0006; }
+/* Retrograde 2.0 — desktop structure, responsive panels, and chrome. */
+html[data-retrograde] #retrograde-settings-button,
+html[data-retrograde] #retrograde-settings-button:is(:hover,:active,:focus) { border:0 !important; border-radius:0 !important; box-shadow:none !important; background:none !important; }
+.rp-preferences-brand { display:flex; align-items:center; gap:14px; }
+.rp-classic-logo { flex:0 0 42px; object-fit:contain; filter:drop-shadow(0 1px 1px #0008); }
+.rp-settings-header { padding:18px 24px; }
+.rp-settings h2 { font:600 24px/1.25 "Segoe UI",Tahoma,sans-serif; }
+.rp-settings-footer { position:sticky; bottom:0; background:var(--rp-menu); z-index:2; }
+.rp-presets { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:6px; margin-bottom:18px; }
+.rp-settings-body { padding-top:16px; }
+.rp-settings { width:min(800px,calc(100vw - 32px)); }
+/* Remove artwork-derived Home gradients, retaining tactile section bars. The
+   hashed header class comes from 1.3.6's dwp-home-header.css. */
+html[data-retrograde] .kMaYBahSBLOnErF7DLR2 { background:var(--rp-main) !important; background-image:none !important; transition:none !important; }
+html[data-retrograde-page="home"] .main-view-container :is(.main-view-container__scroll-node-child,.before-scroll-node) { background:var(--rp-main) !important; }
+html[data-retrograde-page="home"] .main-home-homeHeader { background:var(--rp-main) !important; }
+/* A real navigation stack above Spotify's native compact library. */
+html[data-retrograde] #Desktop_LeftSidebar_Id { container-type:inline-size; container-name:retro-library; }
+html[data-retrograde] #Desktop_LeftSidebar_Id > nav { display:flex; flex-direction:column; min-width:0; height:100%; }
+html[data-retrograde] #Desktop_LeftSidebar_Id > nav > :not(.rp-library-navigation) { flex:1; min-height:0; min-width:0; }
+.rp-library-navigation { flex:0 0 auto; padding:6px 0; border-bottom:1px solid #222; background:var(--rp-sidebar); box-shadow:inset 0 -1px #ffffff16; }
+.rp-library-navigation :is(a,button) { display:flex; align-items:center; gap:8px; width:100%; min-height:29px; padding:4px 12px; background:none; border:0; border-radius:0; color:var(--rp-text); font:12px/1.4 "Segoe UI",Tahoma,sans-serif; text-decoration:none; text-align:left; cursor:pointer; }
+.rp-library-navigation :is(a,button):hover { background:var(--rp-hover); }
+.rp-library-navigation [aria-current="page"] { background:var(--rp-selection); box-shadow:inset 0 1px #ffffff18,inset 0 -1px #0003; }
+.rp-nav-icon { width:16px; flex:0 0 16px; text-align:center; font-size:17px; line-height:18px; color:var(--rp-secondary); }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-header { padding:6px 8px; min-height:42px; background:linear-gradient(var(--rp-chrome-top),var(--rp-chrome-bottom)); }
+html[data-retrograde] .main-yourLibraryX-header > div { width:100%; gap:6px; }
+html[data-retrograde] .main-yourLibraryX-header button { min-height:28px; height:28px; box-sizing:border-box; }
+html[data-retrograde] .main-yourLibraryX-header button[aria-label="Collapse Your Library"] { background:none; border:0; box-shadow:none; padding:0; gap:5px; color:#292929; min-width:0; }
+html[data-retrograde] .main-yourLibraryX-header h1 { color:#292929; font:600 13px/1.3 "Segoe UI",Tahoma,sans-serif; white-space:nowrap; text-shadow:0 1px #ffffff65; }
+html[data-retrograde] .main-yourLibraryX-header svg { color:#353535; fill:currentColor; }
+html[data-retrograde] .main-yourLibraryX-header button[aria-label="Create"] { width:29px; min-width:29px; padding:4px; border-radius:3px; }
+html[data-retrograde] .main-yourLibraryX-header button[aria-label="Create"] > span { display:none; }
+html[data-retrograde] #Desktop_LeftSidebar_Id [role="listbox"][aria-label="Filter options"] { gap:2px; }
+html[data-retrograde] #Desktop_LeftSidebar_Id [data-encore-id="chip"] { border-radius:2px; font-size:11px; }
+html[data-retrograde] #Desktop_LeftSidebar_Id [data-encore-id="chip"] > span { padding:5px 8px; min-height:25px; }
+html[data-retrograde] #Desktop_LeftSidebar_Id [role="combobox"] { border:1px solid #222; border-radius:3px; padding:3px 7px; background:linear-gradient(#696969,#484848); color:var(--rp-text); }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [role="row"][aria-rowindex] { border-radius:0; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [role="row"] [data-encore-id="listRow"] { padding-inline:8px; border-radius:0; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [role="row"] :is(.encore-text-body-medium,.encore-text-body-small) { font-size:12px; font-weight:400; }
+/* Native collapsed library remains an icon rail; remove our stack there. */
+html[data-retrograde] #Desktop_LeftSidebar_Id[data-rp-collapsed="true"] .rp-library-navigation { display:none; }
+@container retro-library (max-width:320px) {
+ .main-yourLibraryX-header button[aria-label="Expand Your Library"] { display:none; }
+ .main-yourLibraryX-header { padding-inline:7px !important; }
+ .main-yourLibraryX-header > div > div { min-width:0; }
+ .main-yourLibraryX-libraryRootlist [data-sortbox-label] { max-width:100px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+}
+/* Widths follow the panel itself, not the overall desktop window. */
+html[data-retrograde] #Desktop_PanelContainer_Id { container-type:inline-size; container-name:retro-panel; min-width:0; }
+.rp-now-info { min-width:0; }
+.rp-now-info h2 { font-size:20px; overflow-wrap:break-word; }
+.rp-now-artists { overflow-wrap:anywhere; }
+html[data-retrograde] [data-rp-about-metrics] { display:flex; flex-wrap:wrap; gap:8px; min-width:0; }
+html[data-retrograde] [data-rp-about-metrics] > :not(button) { flex:1 1 130px; min-width:0; overflow-wrap:anywhere; }
+html[data-retrograde] [data-rp-about-metrics] button { flex:0 0 auto; }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] h2 { display:block; width:100%; box-sizing:border-box; font-size:13px; line-height:1.4; overflow-wrap:anywhere; }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] [role="row"] { background:var(--rp-sidebar); }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] [role="row"]:nth-child(even) { background:color-mix(in srgb,var(--rp-sidebar),black 5%); }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] [role="row"]:hover { background:var(--rp-hover); }
+html[data-retrograde] #Desktop_PanelContainer_Id [role="tablist"] { gap:0; }
+html[data-retrograde] #Desktop_PanelContainer_Id [role="tab"] { min-width:0; white-space:normal; line-height:1.3; padding:9px 10px; }
+@container retro-panel (max-width:330px) {
+ .rp-now-info { padding:11px 12px; }
+ .rp-now-info h2 { font-size:17px; }
+ [data-rp-about-card] [style*="background-image"] { min-height:150px !important; }
+ [data-rp-about-card] { font-size:12px; }
+ [data-rp-about-metrics] { flex-direction:column; align-items:flex-start; gap:9px; }
+ [data-rp-about-metrics] > :not(button) { flex:0 1 auto; }
+ #Desktop_PanelContainer_Id [role="tab"] { font-size:11px; padding:8px 6px; }
+}
+/* Native Windows endpoints drive these buttons. Native mode stays available
+   in Preferences; custom chrome is only mounted after API verification. */
+html[data-retrograde-chrome="true"] .Root__globalNav { padding-inline-end:166px !important; position:relative; }
+html[data-retrograde-chrome="true"] .Root__globalNav > div:not(.rp-window-controls) { min-width:0; }
+.rp-window-controls { position:absolute; right:12px; top:12px; display:flex; gap:3px; z-index:200; -webkit-app-region:no-drag; }
+.rp-window-controls button { width:38px; height:27px; padding:0; border:1px solid #606060; border-radius:3px; color:#303030; background:linear-gradient(#d7d7d7,#929292); box-shadow:inset 0 1px #fff9,0 1px #ffffff35; font:18px/23px "Segoe UI",sans-serif; cursor:pointer; }
+.rp-window-controls button:hover { background:linear-gradient(#f2f2f2,#acacac); }
+.rp-window-controls button:active { background:linear-gradient(#929292,#ccc); box-shadow:inset 0 2px 3px #0005; }
+.rp-window-controls [data-action="close"]:hover { background:linear-gradient(#d68474,#a54d42); color:white; }
+.rp-application-menu-button { position:absolute; z-index:201; left:10px; top:20px; width:38px; height:30px; border:0; background:transparent; color:#353535; font:700 16px/1 "Segoe UI",sans-serif; letter-spacing:2px; cursor:pointer; -webkit-app-region:no-drag; }
+.rp-application-menu-button:hover { background:#ffffff25; border-radius:3px; }
+.rp-application-menu { position:fixed; left:10px; top:65px; width:205px; padding:4px; background:var(--rp-menu); border:1px solid #222; border-radius:3px; box-shadow:inset 0 1px #ffffff30,0 6px 18px #0008; z-index:10000; }
+.rp-application-menu button { display:block; width:100%; padding:8px 12px; background:none; border:0; color:var(--rp-text); text-align:left; font:13px/1.3 "Segoe UI",Tahoma,sans-serif; cursor:pointer; }
+.rp-application-menu button:is(:hover,:focus-visible) { background:var(--rp-selection); }
+/* Native cinema lyrics (Spotify 1.3.6). Keep native sync, scroll-to-current,
+   seeking and source credits; replace artwork colors and oversized typography. */
+html[data-retrograde] [style*="--cinema-mode-bg-color-from"] { --cinema-mode-bg-color-from:var(--rp-main) !important; --cinema-mode-bg-color-to:var(--rp-main) !important; background:var(--rp-main) !important; }
+html[data-retrograde] [style*="--lyrics-color-background"] { --lyrics-color-background:var(--rp-main) !important; --lyrics-color-active:var(--rp-accent) !important; --lyrics-color-inactive:var(--rp-secondary) !important; --lyrics-color-passed:var(--rp-text) !important; --lyrics-color-messaging:var(--rp-secondary) !important; background:var(--rp-main) !important; }
+html[data-retrograde] .u42Yq3ZaAiFZXbkvIpwy .z5jGVvMKwt3RUCcmlwby { width:min(100% - 64px,900px); font:400 var(--rp-lyrics-size,20px)/1.65 Tahoma,"Segoe UI",sans-serif !important; text-wrap:pretty; text-align:left; }
+html[data-retrograde] .u42Yq3ZaAiFZXbkvIpwy.f4UI3r53JBIYeMkkW2Rd { padding-block-start:48px; }
+html[data-retrograde] .J4_kkGYm5hjbZlztykxr { letter-spacing:0; text-shadow:0 1px #0005; }
+html[data-retrograde] .J4_kkGYm5hjbZlztykxr.SOT5gG00YqnGQ4uR7PwQ { font-weight:700; border-left:3px solid var(--rp-accent); padding-left:12px; margin-left:-15px; }
+html[data-retrograde] .J4_kkGYm5hjbZlztykxr.l_p6nU70V4sJ7XaycCp3 { opacity:.8; }
+html[data-retrograde] .LY7FQL7fwsfvvsefVIik { font:11px/1.4 Tahoma,"Segoe UI",sans-serif; border-top:1px solid #ffffff20; width:100%; color:var(--rp-secondary); }
+/* Preserve the installed Lyrics Plus app and give it the same palette/type. */
+html[data-retrograde] .lyrics-lyricsContainer-LyricsContainer { --lyrics-color-background:var(--rp-main) !important; --lyrics-color-active:var(--rp-accent) !important; --lyrics-color-inactive:var(--rp-secondary) !important; --lyrics-font-size:var(--rp-lyrics-size,20px) !important; --lyrics-align-text:left !important; --lyrics-background-noise:none !important; background:var(--rp-main); }
+html[data-retrograde] .lyrics-lyricsContainer-LyricsBackground { background:var(--rp-main) !important; }
+html[data-retrograde] .lyrics-lyricsContainer-LyricsLine { margin-inline:32px !important; font-family:Tahoma,"Segoe UI",sans-serif; font-weight:400 !important; letter-spacing:0 !important; }
+html[data-retrograde] .lyrics-lyricsContainer-LyricsLine-active { font-weight:700 !important; }
+html[data-retrograde] .lyrics-tabBar-header { background:linear-gradient(#666,#444); border-bottom:1px solid #222; }
+html[data-retrograde] .lyrics-lyricsContainer-LyricsUnavailablePage { font:400 20px/1.5 Tahoma,"Segoe UI",sans-serif; letter-spacing:0; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRowDetails"] { display:none; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRowTitle"] { display:flex; align-items:center; gap:7px; min-width:0; font-size:13px !important; font-weight:400 !important; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRowTitle"]::before { content:'♫'; font:14px/1 Tahoma,sans-serif; color:var(--rp-secondary); flex:0 0 14px; text-align:center; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRowTitle"][id*="spotify:artist:"]::before { content:'♙'; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRowTitle"][id*="spotify:album:"]::before { content:'▣'; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRowTitle"] > span { flex:1; min-width:0; }
+@container retro-library (max-width:280px) {
+ html[data-retrograde-library="artwork"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRow"] { gap:7px; padding-inline:6px; }
+ html[data-retrograde-library="artwork"] .main-yourLibraryX-libraryRootlist [class*="list-row__header-side"] { width:32px; min-width:32px; }
+ html[data-retrograde-library="artwork"] .main-yourLibraryX-libraryRootlist [class*="list-row__header-side"] [style*="width: 48px"] { width:32px !important; height:32px !important; }
+ html[data-retrograde-library="artwork"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRowTitle"] { font-size:12px; line-height:16px; }
+ html[data-retrograde-library="artwork"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRowTitle"] > span { --encore-line-clamp:2 !important; white-space:normal; }
+ html[data-retrograde-library="artwork"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRowSubtitle"] { font-size:11px; }
+}
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-narrow="true"] [data-rp-about-metrics] { justify-content:flex-start; height:auto; min-height:0; }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-narrow="true"] [data-rp-about-metrics] > :not(button) { flex:0 1 auto; height:auto; min-height:0; }
+.rp-settings select option { background:var(--rp-menu); color:var(--rp-text); }
+.rp-settings select option:checked { background:var(--rp-selection); }
+
+/* Lyrics Plus blur makes neighboring lines unreadable in a desktop text view. */
+html[data-retrograde] .lyrics-lyricsContainer-LyricsLine { filter:none !important; }
+html[data-retrograde] .lyrics-lyricsContainer-LyricsLine:not(.lyrics-lyricsContainer-LyricsLine-active) { opacity:.8 !important; }
+
+
+/* Retrograde 2.1: classic library furniture and a native queue table. */
+html[data-retrograde] .rp-library-navigation { padding:3px 0; }
+html[data-retrograde] .rp-library-navigation :is(a,button) { min-height:24px; padding:2px 9px; gap:5px; font:12px/20px Tahoma,"Segoe UI",sans-serif; }
+html[data-retrograde] .rp-nav-icon { font-size:14px; width:14px; flex-basis:14px; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-header { min-height:28px; padding:1px 5px !important; border-top:1px solid #d0d0d070; }
+html[data-retrograde] .main-yourLibraryX-header button { min-height:24px; height:24px; }
+html[data-retrograde] .main-yourLibraryX-header h1 { font:12px/22px Tahoma,"Segoe UI",sans-serif; }
+html[data-retrograde] .main-yourLibraryX-header button[aria-label="Create"] { width:24px; min-width:24px; border:0; background:none; box-shadow:none; border-left:1px solid #696969; border-radius:0; }
+html[data-retrograde] #Desktop_LeftSidebar_Id [data-encore-id="chip"] { border:0; border-radius:0; background:none; box-shadow:none; }
+html[data-retrograde] #Desktop_LeftSidebar_Id [data-encore-id="chip"] > span { min-height:23px; padding:3px 6px; border:0; border-bottom:2px solid transparent; border-radius:0; background:none; box-shadow:none; font:11px/16px Tahoma,"Segoe UI",sans-serif; }
+html[data-retrograde] #Desktop_LeftSidebar_Id [data-encore-id="chip"][aria-checked="true"] > span { color:var(--rp-text); background:var(--rp-selection); border-bottom-color:var(--rp-accent); }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-libraryRootlist > div:first-child { padding-block:2px; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-libraryRootlist [role="combobox"] { border:0; background:none; box-shadow:none; padding:3px 5px; font-size:11px; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [role="row"][draggable] { box-shadow:none; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [role="row"][aria-selected="true"] { box-shadow:inset 0 1px #ffffff25,inset 0 -1px #0004; }
+html[data-retrograde-library="classic"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRowTitle"] { font-family:Tahoma,"Segoe UI",sans-serif; font-size:12px !important; gap:4px; }
+html[data-retrograde] #Desktop_LeftSidebar_Id > nav > .rp-library-dock { flex:0 0 auto; min-height:0; border-top:1px solid #171717; background:#292929; }
+.rp-library-dock .rp-now-cover { display:block; height:min(24vh,240px); width:100%; background:#282828; overflow:hidden; }
+.rp-library-dock .rp-now-cover img { display:block; width:100%; height:100%; object-fit:contain; border-radius:0; box-shadow:none; }
+.rp-library-dock .rp-now-info { padding:7px 9px; border-top:1px solid #ffffff35; background:linear-gradient(var(--rp-chrome-top),var(--rp-chrome-bottom)); color:#252525; text-shadow:0 1px #ffffff50; }
+.rp-library-dock .rp-now-info h2 { font:700 12px/17px Tahoma,"Segoe UI",sans-serif; margin:0; }
+.rp-library-dock .rp-now-info a { color:inherit; }
+.rp-library-dock .rp-now-artists { font:11px/16px Tahoma,"Segoe UI",sans-serif; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+html[data-retrograde] #Desktop_LeftSidebar_Id[data-rp-collapsed="true"] .rp-library-dock { display:none; }
+@media(max-height:750px) { .rp-library-dock .rp-now-cover { height:150px; } }
+/* No queue cover cards: native play controls occupy the numbered gutter. */
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] .main-nowPlayingView-headerWrapper { padding:0 4px; min-height:32px; background:linear-gradient(var(--rp-chrome-top),var(--rp-chrome-bottom)); border-bottom:1px solid #222; }
+html[data-retrograde] #Desktop_PanelContainer_Id [role="tab"] { min-height:30px; padding:5px 9px; border-radius:0; font:12px/20px Tahoma,"Segoe UI",sans-serif; }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] [role="tabpanel"] { padding-inline:0; }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] h2 { padding:4px 8px; margin:0; min-height:26px; background:linear-gradient(#666,#484848); border-top:1px solid #ffffff25; border-bottom:1px solid #222; font:700 12px/18px Tahoma,"Segoe UI",sans-serif; }
+html[data-retrograde] [data-rp-classic-queue] { counter-reset:retro-queue; padding:0; margin:0; }
+html[data-retrograde] [data-rp-classic-queue] [role="row"] { counter-increment:retro-queue; border:0; border-radius:0; }
+html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRow"] { --box-min-block-size:32px !important; --box-padding:3px 5px !important; grid-template-columns:22px minmax(0,1fr); gap:5px; min-height:32px; border-radius:0; border-bottom:1px solid #ffffff07; }
+html[data-retrograde] [data-rp-classic-queue] [class$="list-row__header-side"] { width:22px; min-width:0; position:relative; }
+html[data-retrograde] [data-rp-classic-queue] [class$="list-row__header-side"]::before { content:counter(retro-queue); color:var(--rp-secondary); font:11px/24px Tahoma,sans-serif; position:absolute; inset:0; text-align:center; pointer-events:none; }
+html[data-retrograde] [data-rp-classic-queue] [class$="list-row__header-side"] [style*="width: 48px"] { width:22px !important; height:24px !important; opacity:0; }
+html[data-retrograde] [data-rp-classic-queue] [class$="list-row__header-side"] button { width:22px; height:24px; min-width:0; padding:3px; background:var(--rp-hover); }
+html[data-retrograde] [data-rp-classic-queue] [class$="list-row__header-side"] button svg { width:13px; height:13px; }
+html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRow"] [class*="list-row__column"] { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:8px; align-items:center; width:100%; }
+html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRowTitle"] { font:12px/24px Tahoma,"Segoe UI",sans-serif; }
+html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRowSubtitle"] { font:11px/24px Tahoma,"Segoe UI",sans-serif; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; border-left:1px solid #ffffff0c; padding-left:7px; }
+html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRowSubtitle"] [aria-label="Music video"] { display:none; }
+html[data-retrograde] [data-rp-classic-queue] [class$="list-row__slot"] { flex:0 0 20px; }
+@container retro-panel (max-width:300px) {
+ html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRow"] { --box-min-block-size:43px !important; }
+ html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRow"] [class*="list-row__column"] { grid-template-columns:minmax(0,1fr); gap:0; }
+ html[data-retrograde] [data-rp-classic-queue] :is([data-encore-id="listRowTitle"],[data-encore-id="listRowSubtitle"]) { line-height:17px; }
+ html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRowSubtitle"] { border:0; padding:0; }
+}
+
+.rp-library-dock .rp-now-cover { height:auto; aspect-ratio:1; max-height:30vh; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .HfLUs3FrujQayRJaCQPt { padding:2px 4px; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-libraryRootlist .XUNIWPw9CcIrma2FSBrr { padding:2px 5px; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-libraryRootlist .e2T4kII_8aSMGVgzaLJz { min-height:28px; padding-block:0; }
+html[data-retrograde] [data-rp-queue-section] { margin:0; padding:0; gap:0; }
+.rp-queue-tablehead { display:grid; grid-template-columns:22px minmax(0,1.2fr) minmax(0,1fr); gap:5px; padding:3px 8px; padding-right:33px; background:linear-gradient(#999,#777); color:#202020; border-top:1px solid #c9c9c9; border-bottom:1px solid #222; font:11px/17px Tahoma,"Segoe UI",sans-serif; }
+html[data-retrograde] [data-rp-classic-queue] [class*="list-row__slot"] button { width:22px; height:24px; min-height:24px; padding:3px; }
+html[data-retrograde] :is(#queue-panel,#history-panel) > div { gap:8px; }
+@container retro-panel (max-width:300px) { .rp-queue-tablehead { grid-template-columns:22px minmax(0,1fr); }.rp-queue-tablehead > :last-child { display:none; } }
+
+/* 2.2: native content controls, compact rail and explicit alignment. */
+html[data-retrograde] .main-nowPlayingBar-left { visibility:visible; pointer-events:auto; }
+html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRowSubtitle"],
+html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRowSubtitle"] * { text-align:left !important; justify-content:flex-start !important; }
+html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRowSubtitle"] { display:block; width:100%; justify-self:start; }
+html[data-retrograde] #main-view :is([data-encore-id="listRowSubtitle"],[role="gridcell"] a[href*="/artist/"]) { text-align:left; }
+html[data-retrograde] #Desktop_PanelContainer_Id[data-rp-queue-panel] .main-nowPlayingView-headerWrapper { overflow:visible; padding:6px 8px; height:auto; min-height:42px; align-items:center; background:var(--rp-menu); }
+html[data-retrograde] #Desktop_PanelContainer_Id [role="tab"] { box-sizing:border-box; min-height:28px; height:auto; line-height:18px; padding:4px 8px; overflow:visible; }
+html[data-retrograde] #Desktop_PanelContainer_Id [role="tablist"] { overflow:visible; }
+html[data-retrograde] #Desktop_PanelContainer_Id [data-encore-id="tabs"] { min-width:0; flex:1; }
+html[data-retrograde] #Desktop_LeftSidebar_Id[data-rp-collapsed="true"] { background:var(--rp-sidebar); border-right:1px solid #191919; }
+html[data-retrograde] #Desktop_LeftSidebar_Id[data-rp-collapsed="true"] .main-yourLibraryX-header { padding:4px !important; background:var(--rp-menu); }
+html[data-retrograde] #Desktop_LeftSidebar_Id[data-rp-collapsed="true"] .main-yourLibraryX-header button { min-width:26px; border-radius:2px; box-shadow:none; }
+html[data-retrograde] #Desktop_LeftSidebar_Id[data-rp-collapsed="true"] [data-encore-id="listRow"] { border-radius:0; padding:4px; background:transparent; }
+html[data-retrograde] #Desktop_LeftSidebar_Id[data-rp-collapsed="true"] img { border-radius:1px !important; filter:saturate(.75); }
+/* Remove content tint washes, retaining image/banner nodes and URL backgrounds. */
+html[data-retrograde] #main-view :is(.main-entityHeader-backgroundColor,.main-entityHeader-overlay,.main-actionBarBackground-background,.main-home-homeHeader) { background:var(--rp-main) !important; background-image:none !important; }
+html[data-retrograde] #main-view .main-entityHeader-background { background-color:var(--rp-main) !important; }
+html[data-retrograde] #main-view [data-testid="action-bar"] { background:var(--rp-main); }
+/* Scope native controls to Spotify's surfaces; custom-app button implementations
+   retain their own styles and Marketplace snippets stay loaded after the theme. */
+html[data-retrograde] #main-view :is([data-encore-id="chip"],[data-encore-id="buttonSecondary"],[data-encore-id="buttonPrimary"]) { border-radius:3px; }
+html[data-retrograde] #main-view [data-encore-id="chip"] > span { border-radius:3px; background:var(--rp-menu); border:1px solid #222; box-shadow:inset 0 1px #ffffff20; }
+html[data-retrograde] #main-view [data-encore-id="chip"][aria-checked="true"] > span { background:var(--rp-selection); color:var(--rp-text); }
+html[data-retrograde] #main-view :is(button[aria-label="Add"],button[aria-label="Name and details"]) { border-radius:3px; background:var(--rp-menu); border:1px solid #222; box-shadow:inset 0 1px #ffffff20; padding:5px 9px; }
+/* The native media surface occupies the main content grid cell instead of
+   spanning both sidebars. Its native scroll/seek implementation is preserved. */
+html[data-retrograde] [data-rp-media-root] { grid-area:main-view !important; position:relative !important; inset:auto !important; width:100% !important; height:100% !important; min-width:0; overflow:hidden; background:var(--rp-main); container-type:inline-size; container-name:retro-media; }
+html[data-retrograde] [data-rp-media-header] { position:absolute !important; top:0; left:0; width:100%; height:48px; padding:5px 10px; background:var(--rp-menu) !important; border-bottom:1px solid #222; z-index:5; opacity:1 !important; }
+html[data-retrograde] [data-rp-media-header] .DHE9KcSmEsLgG6NuIt2O { display:none; }
+html[data-retrograde] [data-rp-media-header] .kUKJNwc3e_jWdM0Eeyqg { margin-left:auto; }
+html[data-retrograde] [data-rp-media-root] > [data-overlayscrollbars] { position:absolute; top:48px; bottom:0; left:var(--rp-info-width,230px); right:0; width:auto; height:auto; }
+html[data-retrograde] [data-rp-media-root][data-rp-info-side="right"] > [data-overlayscrollbars] { left:0; right:var(--rp-info-width,230px); }
+html[data-retrograde] [data-rp-media-root] :is([style*="--cinema-mode-bg-color-from"],[style*="--lyrics-color-background"]) { background:var(--rp-main) !important; background-image:none !important; }
+html[data-retrograde] [data-rp-media-root] .z5jGVvMKwt3RUCcmlwby { width:calc(100% - 56px) !important; max-width:800px; text-align:center !important; font:400 var(--rp-lyrics-size)/1.8 Tahoma,"Segoe UI",sans-serif !important; }
+html[data-retrograde] [data-rp-media-root] .J4_kkGYm5hjbZlztykxr { text-align:center !important; margin-inline:0 !important; padding:7px 0 !important; border:0 !important; }
+html[data-retrograde] [data-rp-media-root] .J4_kkGYm5hjbZlztykxr.SOT5gG00YqnGQ4uR7PwQ { font-size:calc(var(--rp-lyrics-size) * 1.35); line-height:1.55; color:var(--rp-accent); font-weight:700; text-shadow:0 1px 2px #0008; }
+.rp-listening-info { position:absolute; top:48px; bottom:0; left:0; width:var(--rp-info-width,230px); padding:24px 18px; overflow:auto; border-right:1px solid #ffffff14; background:var(--rp-main); }
+[data-rp-info-side="right"] .rp-listening-info { left:auto; right:0; border-right:0; border-left:1px solid #ffffff14; }
+.rp-listening-info .rp-now-cover { display:block; width:100%; aspect-ratio:1; height:auto; background:#252525; }
+.rp-listening-info img { width:100%; height:100%; object-fit:contain; box-shadow:0 2px 8px #0005; }
+.rp-listening-info .rp-now-info { background:none; padding:16px 0; border:0; text-align:left; }
+.rp-listening-info .rp-now-info h2 { font:700 18px/1.35 Tahoma,"Segoe UI",sans-serif; margin-bottom:7px; }
+.rp-listening-info .rp-now-artists { font-size:13px; color:var(--rp-secondary); }
+.rp-listening-album { margin:17px 0 4px; font-size:13px; color:var(--rp-text); }
+.rp-listening-year { margin:0; font-size:12px; color:var(--rp-secondary); }
+html[data-retrograde] [data-rp-media-root][data-rp-media-mode="artwork"] > :not([data-rp-media-header]):not(.rp-listening-info) { display:none !important; }
+html[data-retrograde] [data-rp-media-root][data-rp-media-mode="artwork"] .rp-listening-info { position:absolute; inset:48px 0 0; width:100%; border:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; }
+html[data-retrograde] [data-rp-media-root][data-rp-media-mode="artwork"] .rp-now-cover { width:min(50vh,340px,80%); }
+html[data-retrograde] [data-rp-media-root][data-rp-media-mode="artwork"] .rp-now-info { text-align:center; }
+@container retro-media (max-width:650px) { [data-rp-media-root] { --rp-info-width:180px; }.rp-listening-info { padding:16px 12px; }.rp-listening-info .rp-now-info h2 { font-size:15px; } }
+@container retro-media (max-width:420px) { .rp-listening-info { top:48px; bottom:auto; width:100%; height:130px; padding:10px; display:flex; gap:12px; border:0; }.rp-listening-info .rp-now-cover { width:100px; flex:0 0 100px; }.rp-listening-info .rp-now-info { padding:0; }.rp-listening-album { margin:7px 0 3px; }html[data-retrograde] [data-rp-media-root] > [data-overlayscrollbars] { top:178px; left:0 !important; right:0 !important; } }
+html[data-retrograde] [data-rp-media-root] { grid-area:main-view !important; z-index:6; }
+html[data-retrograde] [data-rp-media-header]::before,
+html[data-retrograde] [data-rp-media-header]::after,
+html[data-retrograde] [data-rp-media-root] .z5jGVvMKwt3RUCcmlwby::after { background:none !important; background-image:none !important; }
+html[data-retrograde] [data-rp-media-root] .f5IimFOcWI6VZcJ1ilua { background:var(--rp-main) !important; }
+html[data-retrograde] #Desktop_LeftSidebar_Id[data-rp-collapsed="true"] [style*="width: 48px"] { border-radius:1px !important; overflow:hidden; }
+html[data-retrograde] #Desktop_LeftSidebar_Id[data-rp-collapsed="true"] [data-encore-id="listRow"] :is(img,figure) { border-radius:1px !important; }
+html[data-retrograde] [data-rp-media-root] { grid-area:main-view !important; }
+html[data-retrograde] [data-rp-classic-queue] [data-encore-id="listRowSubtitle"] > span { display:flex !important; grid-template-columns:none !important; gap:4px; min-width:0; }
+html[data-retrograde] [data-rp-classic-queue] .CO8qyPNgRV8ziQnoZDC0 { order:0; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+html[data-retrograde] [data-rp-classic-queue] .hT5KQnbxOQd0qC8MZKLy { order:1; flex:0 0 auto; }
+html[data-retrograde] #main-view :is(.main-entityHeader-withoutBackgroundImage,.main-topBar-background,.playlist-playlist-mixingBackground,.IfBZ5VdI_2nwDMl4H6Yh) { background:var(--rp-main) !important; background-image:none !important; }
+/* Native 1.3.6 decorative wash; image-backed headers have a separate class. */
+html[data-retrograde] #main-view .main-entityHeader-withoutBackgroundImage > .uP1rcUSIWCFaOZaoH0ZG { background:var(--rp-main) !important; background-image:none !important; }
+html[data-retrograde] #main-view .main-topBar-background::after { background:none !important; }
+
+/* Media occupies the content and right-panel grid areas; its hidden panel has no divider. */
+html[data-retrograde-media] .rp-sidebar-resizer[data-side="left"] { display:none !important; }
+
+/* 2.3 listening room: artwork and native lyrics form one centered composition.
+   Stage dimensions are shared, so changing sides keeps the pair balanced. */
+html[data-retrograde] [data-rp-media-root] {
+ --rp-stage-edge:max(28px,calc((100% - 1120px) / 2));
+ --rp-info-width:clamp(240px,29cqw,340px);
+ --rp-stage-gap:48px;
+}
+html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) > [data-overlayscrollbars] {
+ top:64px; bottom:16px; left:calc(var(--rp-stage-edge) + var(--rp-info-width) + var(--rp-stage-gap)); right:var(--rp-stage-edge);
+ border-block:1px solid #ffffff0b;
+}
+html[data-retrograde] [data-rp-media-root][data-rp-info-side="right"]:not([data-rp-media-mode="artwork"]) > [data-overlayscrollbars] {
+ left:var(--rp-stage-edge); right:calc(var(--rp-stage-edge) + var(--rp-info-width) + var(--rp-stage-gap));
+}
+html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) .rp-listening-info {
+ inset:auto; left:var(--rp-stage-edge); top:calc(50% + 24px); transform:translateY(-50%);
+ width:var(--rp-info-width); height:auto; max-height:calc(100% - 100px); padding:0;
+ border:1px solid #161616; border-radius:3px; background:var(--rp-menu);
+ box-shadow:inset 0 1px #ffffff20,0 8px 22px #0003; overflow:auto;
+}
+html[data-retrograde] [data-rp-media-root][data-rp-info-side="right"]:not([data-rp-media-mode="artwork"]) .rp-listening-info { left:auto; right:var(--rp-stage-edge); }
+html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) .rp-listening-info::before {
+ content:'NOW PLAYING'; display:block; padding:8px 16px; font:700 10px/16px Tahoma,sans-serif; letter-spacing:1.5px;
+ color:var(--rp-secondary); border-bottom:1px solid #222; box-shadow:inset 0 1px #ffffff12;
+}
+html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) .rp-listening-info .rp-now-cover {
+ width:calc(100% - 28px); margin:14px 14px 0; padding:5px; box-sizing:border-box; background:#202020; border:1px solid #111; box-shadow:0 1px #ffffff22;
+}
+html[data-retrograde] [data-rp-media-root] .rp-listening-info .rp-now-info { padding:18px 20px 22px; }
+html[data-retrograde] [data-rp-media-root] .rp-listening-info .rp-now-info h2 { font-size:clamp(19px,2cqw,25px); line-height:1.3; text-wrap:balance; margin:0 0 8px; }
+html[data-retrograde] [data-rp-media-root] .rp-listening-info .rp-now-artists { font-size:14px; line-height:1.6; }
+html[data-retrograde] [data-rp-media-root] .rp-listening-album { border-top:1px solid #ffffff17; padding-top:14px; margin-top:16px; line-height:1.6; }
+html[data-retrograde] [data-rp-media-root] .rp-listening-year { font-size:12px; letter-spacing:.4px; margin-top:3px; }
+html[data-retrograde] [data-rp-media-root] .z5jGVvMKwt3RUCcmlwby { width:100% !important; max-width:690px; padding-inline:16px; font-family:"Segoe UI",Tahoma,sans-serif !important; }
+html[data-retrograde] [data-rp-media-root] .J4_kkGYm5hjbZlztykxr { color:var(--rp-secondary); padding:10px 8px !important; line-height:1.65; transition:color 120ms ease; }
+html[data-retrograde] [data-rp-media-root] .J4_kkGYm5hjbZlztykxr.SOT5gG00YqnGQ4uR7PwQ { font-size:calc(var(--rp-lyrics-size) * 1.5) !important; font-weight:700; color:var(--rp-accent); line-height:1.5; text-shadow:0 1px 1px #0008; }
+html[data-retrograde] [data-rp-media-header]::after { content:'LYRICS'; position:absolute; left:22px; top:16px; font:700 11px/16px Tahoma,sans-serif; letter-spacing:1.8px; color:var(--rp-secondary); pointer-events:none; }
+html[data-retrograde] [data-rp-media-root][data-rp-media-mode="artwork"] [data-rp-media-header]::after { content:'ARTWORK'; }
+html[data-retrograde] [data-rp-media-root][data-rp-media-mode="artwork"] .rp-listening-info { transform:none; max-height:none; box-shadow:none; border-radius:0; }
+@container retro-media (max-width:800px) {
+ [data-rp-media-root] { --rp-stage-gap:24px; --rp-info-width:220px; --rp-stage-edge:20px; }
+ html[data-retrograde] [data-rp-media-root] .rp-listening-info .rp-now-info { padding:14px; }
+}
+@container retro-media (max-width:560px) {
+ html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) .rp-listening-info {
+  left:16px; right:16px; top:64px; width:auto; height:160px; max-height:none; transform:none; display:flex; align-items:center;
+ }
+ html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) .rp-listening-info::before { display:none; }
+ html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) .rp-listening-info .rp-now-cover { flex:0 0 132px; width:132px; margin:12px; }
+ html[data-retrograde] [data-rp-media-root] .rp-listening-info .rp-now-info { padding:10px 12px 10px 0; min-width:0; }
+ html[data-retrograde] [data-rp-media-root] .rp-listening-info .rp-now-info h2 { font-size:18px; }
+ html[data-retrograde] [data-rp-media-root] .rp-listening-album { padding-top:6px; margin-top:6px; font-size:12px; }
+ html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) > [data-overlayscrollbars] { top:240px; left:16px; right:16px; }
+}
+@container retro-media (max-height:500px) {
+ html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) .rp-listening-info .rp-now-cover { max-height:170px; width:auto; aspect-ratio:1; margin-inline:auto; }
+}
+
+/* 2.4: native cinema translates the library offscreen; keep the real rail in
+   its grid area and let the main-view area grow when the right panel closes. */
+html[data-retrograde-media] #Desktop_LeftSidebar_Id { transform:none !important; translate:none !important; transition:none !important; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed { padding:6px 4px !important; height:auto; min-height:78px; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed > div { display:flex; flex-direction:column; align-items:center; gap:6px; width:100%; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed > div > div,
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed > div > div > div { display:flex; justify-content:center; align-items:center; width:100%; margin:0 !important; padding:0; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed button:is([aria-label="Open Your Library"],[aria-label="Create"]) { display:flex; align-items:center; justify-content:center; width:36px; min-width:36px; max-width:36px; height:30px; min-height:30px; margin:0; padding:5px; border:1px solid #333; border-radius:3px; box-shadow:inset 0 1px #ffffff80,0 1px 1px #0005; background:linear-gradient(#d0d0d0,#999); color:#292929; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed button[aria-label="Create"] { background:linear-gradient(color-mix(in srgb,var(--rp-accent),white 45%),color-mix(in srgb,var(--rp-accent),black 18%)); color:var(--rp-accent-ink); border-color:#3c4529; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed button[aria-label="Create"] svg { color:inherit; fill:currentColor; width:17px; height:17px; }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed button:hover { filter:brightness(1.1); }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed button:active { box-shadow:inset 0 2px 3px #0005; filter:brightness(.92); }
+html[data-retrograde] #Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed button:focus-visible { outline:2px solid var(--rp-accent); outline-offset:2px; }
+@container retro-media (max-width:800px) {
+ html[data-retrograde] [data-rp-media-root] > [data-overlayscrollbars],html[data-retrograde] [data-rp-media-root] .rp-listening-info { --rp-stage-gap:24px; --rp-info-width:220px; --rp-stage-edge:20px; }
+}
+@container retro-media (max-width:560px) {
+ html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) > [data-overlayscrollbars] { left:16px !important; right:16px !important; top:240px; }
+ html[data-retrograde] [data-rp-media-root]:not([data-rp-media-mode="artwork"]) .rp-listening-info { left:16px; right:16px; }
+}
+/* Closing native Queue can reveal an empty NPV behind cinema. Treat that as
+   available reading space; the real Queue toggle can reopen the panel. */
+html[data-retrograde] [data-rp-media-root][data-rp-media-queue="false"] { grid-area:main-view / main-view / main-view / right-sidebar !important; }
+html[data-retrograde-media-queue="false"] .rp-sidebar-resizer[data-side="right"] { display:none !important; }
+
+/* 2.4.1: collapsed rows retain a zero-width text column. Its native gap made
+   every artwork tile sit left of the rail/header centerline. Keep row heights
+   and the native virtualizer; center only the fixed artwork column. */
+html[data-retrograde] #Desktop_LeftSidebar_Id[data-rp-collapsed="true"] .main-yourLibraryX-libraryRootlist [data-encore-id="listRow"] {
+ grid-template-columns:48px 0px !important; column-gap:0 !important; justify-content:center !important;
+}
+
+/* The supplied orb includes its original shadow and transparent margin. */
+.rp-classic-logo { width:52px; height:52px; flex:0 0 52px; filter:none; }
+
+/* Center the close graphic geometrically, independent of font baselines. */
+.rp-settings .rp-close { display:inline-grid; place-items:center; flex:0 0 32px; box-sizing:border-box; line-height:1; padding:0; }
+.rp-settings .rp-close svg { display:block; width:16px; height:16px; margin:0; }
+
+/* Menu hover/open feedback is immediate; lyric timing/scrolling stays native. */
+html[data-retrograde] :is(.rp-application-menu,[role="menu"],#context-menu) :is(button,[role="menuitem"]),html[data-retrograde] .rp-application-menu { transition:none !important; }
