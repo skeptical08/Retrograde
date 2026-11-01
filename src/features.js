@@ -1,6 +1,6 @@
 /* Spotify 1.3.6 compatibility: native sidebar size preferences, a minimal NPV,
    and a fully-rendered artist Popular table. React-owned nodes are never moved. */
-function createRetrogradeFeatures({getSettings,setWidths,preferences,onPreferences}) {
+function createRetrogradeFeatures({getSettings,setWidths,setPlayerArtworkDock,preferences,onPreferences}) {
   const controller=new AbortController(),signal=controller.signal;
   const handles=new Map(),headers=new Set(),tagged=new Set(),stats={syncs:0,lastMs:0,maxMs:0,totalMs:0,passes:{layout:0,panel:0,artist:0,queue:0,media:0,chrome:0}};
   const LAYOUT=1,PANEL=2,ARTIST=4,QUEUE=8,MEDIA=16,CHROME=32,ALL=63;
@@ -16,6 +16,21 @@ function createRetrogradeFeatures({getSettings,setWidths,preferences,onPreferenc
     const bar=document.querySelector('[data-testid="now-playing-bar"]');
     if(bar&&playerBar!==bar){playerImageObserver.disconnect();playerBar=bar;playerImageObserver.observe(bar,{childList:true,subtree:true,attributes:true,attributeFilter:['src']});}
     const img=bar?.querySelector('[data-testid="cover-art-container"] img');
+    const widget=bar?.querySelector('[data-testid="now-playing-widget-v2"]');
+    if(widget){
+      let toggle=widget.querySelector(':scope > .rp-player-dock-toggle');
+      if(!toggle){
+        toggle=document.createElement('button');toggle.type='button';toggle.className='rp-player-dock-toggle';
+        toggle.innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+        toggle.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();setPlayerArtworkDock(!getSettings().playerArtworkDock);},{signal});
+        widget.append(toggle);
+      }
+      const expanded=document.documentElement.getAttribute('data-rp-player-docked')==='true';
+      const label=expanded?'Collapse artwork into playback bar':'Expand artwork above playback bar';
+      if(toggle.getAttribute('aria-label')!==label){toggle.setAttribute('aria-label',label);toggle.title=label;}
+      toggle.setAttribute('aria-expanded',String(expanded));
+      toggle.hidden=!!document.querySelector('#Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed');
+    }
     // Spotify supplies a 56px thumbnail for its original mini-widget. Its own
     // CDN size variant keeps the enlarged native cover sharp without a fetch loop.
     if(img&&img.src.includes('ab67616d000011eb')){
@@ -25,7 +40,7 @@ function createRetrogradeFeatures({getSettings,setWidths,preferences,onPreferenc
   }
   let playerBar;
   const playerImageObserver=new MutationObserver(playerArtwork);
-  signal.addEventListener('abort',()=>{playerImageObserver.disconnect();playerBar?.querySelector('[data-testid="cover-art-container"] img')?.removeAttribute('srcset');},{once:true});
+  signal.addEventListener('abort',()=>{playerImageObserver.disconnect();playerBar?.querySelector('[data-testid="cover-art-container"] img')?.removeAttribute('srcset');document.querySelectorAll('.rp-player-dock-toggle').forEach(e=>e.remove());},{once:true});
   function schedule(flags=ALL){frames.add(flags);}
   // Virtualized list rows and native lyric lines need no theme JavaScript.
   // Only structural changes in the relevant surface trigger its adaptation.
@@ -58,8 +73,9 @@ function createRetrogradeFeatures({getSettings,setWidths,preferences,onPreferenc
     mark(left,'data-rp-collapsed',String(!!left.querySelector('.main-yourLibraryX-headerIsCollapsed')));
     // Size the native player's artwork dock from the actual library geometry.
     // CSS repositions the existing widget; React ownership and menus are retained.
-    const docked=!left.querySelector('.main-yourLibraryX-headerIsCollapsed')&&(geometry.rects.left?.width||0)>=180;
+    const docked=getSettings().playerArtworkDock!==false&&!left.querySelector('.main-yourLibraryX-headerIsCollapsed')&&(geometry.rects.left?.width||0)>=180;
     mark(document.documentElement,'data-rp-player-docked',String(docked));
+    playerArtwork();
     override(document.documentElement,'--rp-player-library-width',Math.round(geometry.rects.left?.width||300)+'px');
     // Remove the older generated duplicate; the native widget is the dock.
     nav.querySelector('.rp-library-dock')?.remove();

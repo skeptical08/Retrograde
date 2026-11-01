@@ -8,7 +8,7 @@
   try {settings=P.sanitize(JSON.parse(localStorage.getItem(KEY)||localStorage.getItem('reprise:preferences:v1')));} catch { /* corrupt storage falls back safely */ }
   const data=(key,value)=>{value=String(value);if(root.dataset[key]!==value)root.dataset[key]=value;};
   const token=(key,value)=>{if(root.style.getPropertyValue(key)!==value)root.style.setProperty(key,value);};
-  const behavior=()=>JSON.stringify([settings.libraryStyle,settings.density,settings.trackArtwork,settings.fontSize,settings.windowControls,settings.lyricsInfoSide]);
+  const behavior=()=>JSON.stringify([settings.libraryStyle,settings.density,settings.trackArtwork,settings.fontSize,settings.windowControls,settings.lyricsInfoSide,settings.playerArtworkDock]);
   function apply(){
     data('retrograde','true'); data('retrogradeDensity',settings.density);
     data('retrogradeRelief',settings.relief); data('retrogradeMotion',settings.motion);
@@ -68,6 +68,8 @@
     function select(k,label,options){const row=element('div',{class:'rp-option'}),l=element('label',{for:'rp-'+k},label),s=element('select',{id:'rp-'+k});for(const[value,text]of options)s.append(element('option',{value},text));s.onchange=()=>{settings[k]=s.value;changed();};row.append(l,s);layout.append(row);refs.set(k,{control:s});}
     select('lyricsInfoSide','Lyrics information position',[['left','Left'],['right','Right']]);
     select('libraryStyle','Library rows',[['classic','Classic list'],['artwork','Album artwork']]);
+    const dockRow=element('div',{class:'rp-option'}),dock=element('input',{id:'rp-playerArtworkDock',type:'checkbox'});
+    dock.onchange=()=>{settings.playerArtworkDock=dock.checked;changed();};dockRow.append(element('label',{for:'rp-playerArtworkDock'},'Artwork above playback bar'),dock);layout.append(dockRow);refs.set('playerArtworkDock',{control:dock});
     select('density','Track spacing',[['compact','Compact'],['comfortable','Comfortable']]);
     layout.append(element('p',{class:'rp-density-note'},'Album icons use Spotify’s native List layout.'));
     const artRow=element('div',{class:'rp-option'}),art=element('input',{id:'rp-trackArtwork',type:'checkbox'});
@@ -102,7 +104,7 @@
     topbar.element.id='retrograde-settings-button';
     menu=new Spicetify.Menu.Item('Retrograde theme settings',false,open);menu.register();
     applyDensity();
-    lastBehavior=behavior();lastWidths=settings.leftWidth+'|'+settings.rightWidth;features=createRetrogradeFeatures({getSettings:()=>settings,onPreferences:open,setWidths:(left,right,commit)=>{settings.leftWidth=left;settings.rightWidth=right;if(commit)save();},preferences:P});
+    lastBehavior=behavior();lastWidths=settings.leftWidth+'|'+settings.rightWidth;features=createRetrogradeFeatures({getSettings:()=>settings,onPreferences:open,setPlayerArtworkDock:value=>{settings.playerArtworkDock=!!value;save();},setWidths:(left,right,commit)=>{settings.leftWidth=left;settings.rightWidth=right;if(commit)save();},preferences:P});
   }
   apply();ready();
   window.Retrograde={openSettings:open,getSettings:()=>({...settings}),getDiagnostics:()=>features?.diagnostics(),dispose(){if(disposed)return;disposed=true;marketplaceLifecycle?.dispose();clearTimeout(timer);features?.dispose();close();menu?.deregister();topbar?.element?.remove();delete root.dataset.retrograde;delete root.dataset.retrogradeDensity;delete root.dataset.retrogradeRelief;delete root.dataset.retrogradeMotion;delete root.dataset.retrogradeTrackArtwork;for(const name of ['retrogradeLibrary','retrogradePage','retrogradeMedia','retrogradeMediaQueue'])delete root.dataset[name];for(const k of [...P.colorKeys,'font-size','accent-ink','lyrics-size'])root.style.removeProperty('--rp-'+k);}};

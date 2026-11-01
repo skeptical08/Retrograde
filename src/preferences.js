@@ -1,6 +1,6 @@
 /* Retrograde preferences: deliberately independent of Spotify account settings. */
 const RetrogradePreferences = (() => {
-  const defaults = Object.freeze({version:1,accent:'#a4cc35',sidebar:'#414141',menu:'#424242',main:'#303030',player:'#505050',text:'#eeeeee',secondary:'#c2c2c2',selection:'#526c82',hover:'#505050',density:'compact',fontSize:13,relief:'subtle',motion:true,trackArtwork:false,leftWidth:300,rightWidth:360,libraryStyle:'classic',windowControls:true,lyricsSize:20,lyricsInfoSide:'left'});
+  const defaults = Object.freeze({version:1,accent:'#a4cc35',sidebar:'#414141',menu:'#424242',main:'#303030',player:'#505050',text:'#eeeeee',secondary:'#c2c2c2',selection:'#526c82',hover:'#505050',density:'compact',fontSize:13,relief:'subtle',motion:true,trackArtwork:false,playerArtworkDock:true,leftWidth:300,rightWidth:360,libraryStyle:'classic',windowControls:true,lyricsSize:20,lyricsInfoSide:'left'});
   const colorKeys=['accent','sidebar','menu','main','player','text','secondary','selection','hover'];
   const presets={
     'Classic Green':{...defaults},
@@ -23,6 +23,7 @@ const RetrogradePreferences = (() => {
     if(typeof input.fontSize==='number' && Number.isFinite(input.fontSize)) out.fontSize=Math.min(16,Math.max(11,Math.round(input.fontSize)));
     if(typeof input.motion==='boolean') out.motion=input.motion;
     if(typeof input.trackArtwork==='boolean') out.trackArtwork=input.trackArtwork;
+    if(typeof input.playerArtworkDock==='boolean') out.playerArtworkDock=input.playerArtworkDock;
     if(typeof input.windowControls==='boolean') out.windowControls=input.windowControls;
     if(['left','right'].includes(input.lyricsInfoSide))out.lyricsInfoSide=input.lyricsInfoSide;
     if(['classic','artwork'].includes(input.libraryStyle))out.libraryStyle=input.libraryStyle;
