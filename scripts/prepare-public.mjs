@@ -9,6 +9,7 @@ for(const item of ['src','scripts','tests','.github','README.md','LICENSE','pack
 await fs.mkdir(path.join(out,'dist'),{recursive:true});
 await fs.cp(path.join(root,'dist/Retrograde'),path.join(out,'dist/Retrograde'),{recursive:true});
 await fs.mkdir(path.join(out,'docs'),{recursive:true});
+await fs.cp(path.join(root,'docs/gallery'),path.join(out,'docs/gallery'),{recursive:true});
 for(const item of ['DEVELOPMENT.md','PERFORMANCE.md','THIRD_PARTY.md','MARKETPLACE.md','Throwback-LICENSE.txt']){
   await fs.copyFile(path.join(root,'docs',item),path.join(out,'docs',item));
 }
