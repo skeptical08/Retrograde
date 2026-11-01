@@ -672,3 +672,96 @@ html[data-retrograde][data-rp-player-docked="false"] .main-nowPlayingBar-volumeB
 html[data-retrograde][data-rp-player-docked="false"] .playback-bar { left:465px; }
 html[data-retrograde] [data-testid="now-playing-bar"] { background:linear-gradient(color-mix(in srgb,var(--rp-player),white 25%),var(--rp-player)); }
 html[data-retrograde][data-rp-player-docked="true"] [data-testid="now-playing-widget-v2-byline"] a { font-weight:400 !important; }
+
+/* One shared centerline for the native transport, volume and mode controls. */
+html[data-retrograde] { --rp-transport-left:9px; }
+html[data-retrograde][data-rp-player-docked="false"] { --rp-transport-left:232px; }
+html[data-retrograde] .player-controls__buttons {
+ left:var(--rp-transport-left); top:50%; transform:translateY(-50%);
+ height:28px; width:auto; align-items:center; justify-content:flex-start;
+}
+html[data-retrograde] .player-controls__buttons button {
+ display:inline-flex; align-items:center; justify-content:center;
+ width:28px; min-width:28px; height:28px; box-sizing:border-box;
+}
+html[data-retrograde] [data-testid="control-button-playpause"] > span { display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; }
+html[data-retrograde] .player-controls__buttons button:not([data-testid]),
+html[data-retrograde] [data-testid="control-button-repeat"] {
+ position:fixed; top:auto; right:auto; bottom:8px; transform:none;
+}
+/* The general-controls container is transformed for vertical centering, so
+   fixed descendants would use its containing block. Anchor modes to that
+   transport row with absolute offsets, leaving React and native actions intact. */
+html[data-retrograde] .player-controls__buttons button:not([data-testid]) { position:absolute; left:228px; top:0; bottom:auto; }
+html[data-retrograde] [data-testid="control-button-repeat"] { position:absolute; left:260px; top:0; bottom:auto; }
+html[data-retrograde] .main-nowPlayingBar-volumeBar,
+html[data-retrograde][data-rp-player-docked="false"] .main-nowPlayingBar-volumeBar {
+ position:fixed; left:calc(var(--rp-transport-left) + 102px); top:auto; bottom:8px;
+ height:28px; width:116px; display:flex; align-items:center; gap:4px;
+}
+html[data-retrograde] .main-nowPlayingBar-volumeBar > div { flex:1; min-width:0; }
+html[data-retrograde] .main-nowPlayingBar-volumeBar button { width:28px; min-width:28px; height:28px; padding:0; display:inline-flex; align-items:center; justify-content:center; }
+html[data-retrograde] .main-nowPlayingBar-volumeBar svg { width:14px; height:14px; }
+html[data-retrograde] .playback-bar { left:max(326px,calc(var(--rp-player-library-width) + 12px)); right:200px; top:50%; transform:translateY(-50%); align-items:center; }
+html[data-retrograde][data-rp-player-docked="false"] .playback-bar { left:550px; }
+html[data-retrograde] .main-nowPlayingBar-right { right:10px; top:50%; transform:translateY(-50%); }
+@media(max-width:1050px) {
+ html[data-retrograde] .playback-bar { left:326px; right:170px; }
+ html[data-retrograde][data-rp-player-docked="false"] .playback-bar { left:550px; }
+ html[data-retrograde] .main-nowPlayingBar-right { right:10px; }
+}
+/* The utility wrapper stays untransformed so its native volume control can
+   retain the viewport as its fixed-position containing block. */
+html[data-retrograde] .main-nowPlayingBar-right { top:calc(50% - 15px); transform:none; }
+
+/* The native widget is one edge-to-edge block. Its existing 8px cover margins
+   and grid row gap must not survive the expanded presentation. */
+html[data-retrograde] [data-testid="now-playing-bar"] { box-sizing:border-box; padding:0; }
+html[data-retrograde] .main-nowPlayingBar-nowPlayingBar { padding:0; }
+html[data-retrograde] .main-nowPlayingBar-left,
+html[data-retrograde] .main-nowPlayingBar-left * { box-sizing:border-box; }
+html[data-retrograde][data-rp-player-docked="true"] #Desktop_LeftSidebar_Id > nav { padding-bottom:calc(min(var(--rp-player-library-width),40vh) + 43px); }
+html[data-retrograde][data-rp-player-docked="true"] .main-nowPlayingBar-left {
+ position:absolute; left:0; bottom:100%; height:calc(min(var(--rp-player-library-width),40vh) + 43px);
+ width:var(--rp-player-library-width); padding:0; margin:0; border:0; display:block;
+}
+html[data-retrograde] .main-nowPlayingBar-left > div { width:100%; height:100%; margin:0; padding:0; }
+html[data-retrograde] [data-testid="now-playing-widget-v2"] { position:relative; }
+html[data-retrograde][data-rp-player-docked="true"] [data-testid="now-playing-widget-v2"] {
+ width:100%; max-width:none; height:100%; margin:0 !important; padding:0 !important;
+ gap:0 !important; grid-template-rows:minmax(0,1fr) 43px; align-items:stretch;
+}
+html[data-retrograde][data-rp-player-docked="true"] [data-testid="cover-art-container"],
+html[data-retrograde][data-rp-player-docked="true"] [data-testid="cover-art-container"] :is(div,button) {
+ width:100% !important; height:100% !important; min-height:0; margin:0 !important; padding:0 !important;
+ border:0; border-radius:0; display:block; align-self:stretch; line-height:0;
+}
+html[data-retrograde][data-rp-player-docked="true"] [data-testid="cover-art-container"] img {
+ width:100% !important; height:100% !important; aspect-ratio:auto !important;
+ object-fit:cover; display:block; margin:0; padding:0; border:0; border-radius:0;
+}
+html[data-retrograde][data-rp-player-docked="true"] [data-testid="now-playing-widget-v2"] > .nOqG63GIeC1nw7T6gsOI {
+ margin:0 !important; padding:4px 8px; min-width:0; width:100%; height:43px; align-self:stretch;
+}
+html[data-retrograde][data-rp-player-docked="true"] [data-testid="now-playing-widget-v2"] > .KMxCDV77Kb3sbuKtkwpw {
+ margin:0 !important; padding:0; width:30px; min-width:0; height:43px; align-self:stretch;
+}
+html[data-retrograde][data-rp-player-docked="false"] .main-nowPlayingBar-left { bottom:0; padding:2px 0; }
+html[data-retrograde][data-rp-player-docked="false"] [data-testid="now-playing-widget-v2"] {
+ display:flex; align-items:center; gap:8px; width:100%; max-width:none; height:40px; margin:0; padding:0;
+}
+html[data-retrograde][data-rp-player-docked="false"] [data-testid="cover-art-container"] { flex:0 0 40px; margin:0; padding:0; }
+html[data-retrograde] .rp-player-dock-toggle {
+ position:absolute; top:6px; right:6px; z-index:9; width:26px; min-width:26px; height:26px;
+ padding:5px; margin:0; display:grid; place-items:center; border:1px solid #111;
+ border-radius:3px; background:linear-gradient(#dedede,#929292); color:#242424;
+ box-shadow:inset 0 1px #fff9,0 1px 3px #0008; opacity:0; pointer-events:none;
+}
+html[data-retrograde] .rp-player-dock-toggle[hidden] { display:none; }
+html[data-retrograde] .rp-player-dock-toggle svg { display:block; width:14px; height:14px; }
+html[data-retrograde] [data-testid="now-playing-widget-v2"]:has([data-testid="cover-art-container"]:hover) > .rp-player-dock-toggle,
+html[data-retrograde] .rp-player-dock-toggle:is(:hover,:focus-visible) { opacity:1; pointer-events:auto; }
+html[data-retrograde] .rp-player-dock-toggle:focus-visible { outline:2px solid var(--rp-accent); outline-offset:2px; }
+html[data-retrograde] .rp-player-dock-toggle:active { background:linear-gradient(#929292,#dedede); }
+html[data-retrograde][data-rp-player-docked="false"] .rp-player-dock-toggle { left:20px; top:0; right:auto; width:20px; min-width:20px; height:20px; padding:3px; }
+html[data-retrograde] .rp-player-dock-toggle[aria-expanded="false"] svg { transform:rotate(180deg); }
