@@ -1,0 +1,5 @@
+work/
+backups/
+outputs/
+node_modules/
+*.log

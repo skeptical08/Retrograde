@@ -1,0 +1,16 @@
+{
+  "name": "Retrograde",
+  "description": "An early-2010s Spotify desktop theme with graphite panels, silver controls, classic track tables and customizable colors.",
+  "preview": "preview.png",
+  "readme": "README.md",
+  "usercss": "dist/Retrograde/user.css",
+  "schemes": "dist/Retrograde/color.ini",
+  "include": [
+    "https://skeptical08.github.io/Retrograde/dist/Retrograde/theme.js"
+  ],
+  "branch": "main",
+  "authors": [
+    { "name": "skeptical08", "url": "https://github.com/skeptical08" }
+  ],
+  "tags": ["retro", "classic", "dark", "customizable"]
+}
