@@ -6,11 +6,27 @@ An early-2010s Spotify desktop theme: graphite panels, silver controls, compact 
 
 ## A familiar desktop, made yours
 
+### Expanded artwork or a compact player
+
+The artwork and track-details band form one flush block above the playback strip. Hover over the cover to reveal the top-right collapse button, or focus it with the keyboard. It moves the artwork and details completely into the playback bar. Hover over the compact thumbnail to expand again, or use **Preferences → Artwork above playback bar**. The choice saves locally and survives restart.
+
+![Expanded artwork flush with the playback strip](docs/gallery/player-expanded.png)
+
+![Artwork and track details collapsed inside the playback bar](docs/gallery/player-compact.png)
+
 ### Classic controls and compact tables
 
-Silver chrome, graphite surfaces, clear column headers and a compact playback bar bring the early Spotify desktop back into focus.
+Silver chrome, graphite surfaces, clear column headers and a slim playback strip bring the early Spotify desktop back into focus. The native song artwork and details sit above the lower-left transport controls, just like the classic desktop; collapsing the library keeps a compact song widget inside the strip.
 
 ![Album view with compact track tables and classic controls](docs/gallery/album.png)
+
+### Home and artist pages
+
+Home keeps dense discovery shelves on a solid graphite surface. Artist pages retain their full banner, with Popular tracks presented as a compact table.
+
+![Home music recommendations with the classic player](docs/gallery/home.png)
+
+![Artist banner and Popular track table](docs/gallery/artist.png)
 
 ### Lyrics with room to breathe
 
@@ -33,6 +49,14 @@ Start with one of ten curated schemes, then adjust colors, density, typography, 
 
 ![Retrograde Preferences with ten color presets and editable palette and layout controls](docs/gallery/preferences.png)
 
+The same album page in four alternative schemes; Classic Green is shown above. Click an image to inspect the full client capture.
+
+| Arctic Blue | Amber Studio |
+| --- | --- |
+| ![Arctic Blue album view](docs/gallery/arctic-blue.png) | ![Amber Studio album view](docs/gallery/amber-studio.png) |
+| Midnight Cobalt | Plum |
+| ![Midnight Cobalt album view](docs/gallery/midnight-cobalt.png) | ![Plum album view](docs/gallery/plum.png) |
+
 All images are captures from the actual Windows Spotify client running Retrograde 1.0. Some views are cropped to emphasize a feature and omit personal library details and unrelated overlays.
 
 ## Features
@@ -43,6 +67,7 @@ All images are captures from the actual Windows Spotify client running Retrograd
 - Ten color presets and editable accent, surface, text, selection and hover colors.
 - Compact/comfortable density, optional track artwork, text/lyrics sizes, relief and reduced motion.
 - Native playback, search, context menus, navigation and virtualized scrolling.
+- Subtle remote-device status above the timeline; click it to open Spotify's device picker without adding another playback-bar row.
 
 ## Compatibility
 
@@ -77,7 +102,7 @@ spicetify apply
 
 Click the round sliders icon beside Back/Forward, or choose **Retrograde theme settings** from the profile menu. Changes preview and save locally. Presets preserve layout choices; Reset restores defaults. Lyrics information can appear left or right. Track album icons default off.
 
-Drag a sidebar divider to resize, or focus it and use the arrow keys (Shift makes larger steps). Widths can also be set in Preferences. Current track artwork/title/artists remain in the native player bar. Lyrics uses Spotify's own availability and synchronization; no replacement lyrics provider is installed.
+Drag a sidebar divider to resize, or focus it and use the arrow keys (Shift makes larger steps). Widths can also be set in Preferences. The native current-track widget docks above the player strip with the library expanded, and sits inside the strip with the library collapsed. Lyrics uses Spotify's own availability and synchronization; no replacement lyrics provider is installed.
 
 ## Update or remove
 
