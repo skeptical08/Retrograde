@@ -56,3 +56,11 @@ test('lyrics side validates, survives storage and is independent of presets',()=
  assert.equal(right.lyricsInfoSide,'right');
  for(const preset of Object.values(P.presets))assert.equal(P.applyPreset(right,preset).lyricsInfoSide,'right');
 });
+
+test('player artwork preference migrates, persists and survives palette changes',()=>{
+ const old={version:1};assert.equal(P.sanitize(old).playerArtworkDock,true);
+ const compact=P.sanitize({...P.defaults,playerArtworkDock:false});
+ assert.equal(P.sanitize(JSON.parse(JSON.stringify(compact))).playerArtworkDock,false);
+ assert.equal(P.sanitize({...P.defaults,playerArtworkDock:'false'}).playerArtworkDock,true);
+ for(const preset of Object.values(P.presets))assert.equal(P.applyPreset(compact,preset).playerArtworkDock,false);
+});
