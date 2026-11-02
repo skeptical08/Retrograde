@@ -25,8 +25,8 @@ The topic is the discovery mechanism, not an approval or compatibility certifica
 - GitHub Pages serves the companion script as application/javascript over HTTPS; its SHA-256 matches the released file.
 - GitHub CI passed build, all 17 tests, manifest validation and generated-file reproducibility. A fresh public clone also passed locally.
 - Installed Retrograde from its actual Marketplace card and completed the requested reload. The theme loaded and Preferences opened with Retrograde 1.0 branding and retained local settings.
-- The companion cleanup is covered by automated tests. Additional live uninstall/reinstall and full restart checks were not exercised in this publication check.
-- The README includes five real-client feature captures: album tables, lyrics, Queue, Now Playing and Preferences. Public crops omit personal library text and unrelated overlays.
+- The companion cleanup is covered by automated tests. Live Marketplace uninstall/reinstall was not exercised. The later classic-player revision was installed locally and verified after a normal full Spotify restart; see PLAYER-REFINEMENT.md.
+- The README includes real-client Home, artist, album, lyrics, Queue, Now Playing and Preferences captures, plus Arctic Blue, Amber Studio, Midnight Cobalt and Plum in action. Public crops omit personal library text and unrelated overlays.
 
 The theme is published and discoverable. This is not a compatibility certification for other Spotify/Spicetify versions or platforms.
 
