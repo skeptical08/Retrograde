@@ -54,7 +54,7 @@ function createRetrogradeRomanizedLines({getSettings,onToggle}){
   enqueue();
  }
  function update(next){
-  if(disposed)return;if(next!==surface||(next&&(!button?.isConnected||!viewport?.isConnected))){cleanup();surface=next;if(!surface)return;viewport=surface.querySelector('[data-rp-karaoke-viewport]')||surface.querySelector('[data-overlayscrollbars]');const header=surface.querySelector('[data-rp-media-header]');
+  if(disposed)return;if(next!==surface||(next&&(!button?.isConnected||!viewport?.isConnected))){cleanup();surface=next;if(!surface)return;viewport=surface.querySelector('[data-rp-karaoke-viewport]')||surface.querySelector('[data-overlayscrollbars]');const header=surface.querySelector('[data-rp-listening-toolbar]')||surface.querySelector('[data-rp-media-header]');
    button=document.createElement('button');button.type='button';button.className='rp-romanization-toggle';button.textContent='Aa';button.setAttribute('aria-label','Romanize lyrics');button.title='Romanization: Japanese, Korean and Mandarin';button.addEventListener('click',()=>{onToggle(getSettings().lyricsRomanization===false);scan();});
    status=document.createElement('span');status.className='rp-romanization-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');header?.append(status,button);
    observer=new MutationObserver(records=>{if(records.some(r=>{const e=r.target.nodeType===1?r.target:r.target.parentElement;if(e?.closest('.rp-romanized-line'))return false;if(r.type==='characterData')return true;return ![...r.addedNodes,...r.removedNodes].every(n=>n.nodeType===1&&n.classList.contains('rp-romanized-line'));}))schedule();});

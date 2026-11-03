@@ -1,6 +1,6 @@
 /* Retrograde preferences: deliberately independent of Spotify account settings. */
 const RetrogradePreferences = (() => {
-  const defaults = Object.freeze({version:1,accent:'#a4cc35',sidebar:'#414141',menu:'#424242',main:'#303030',player:'#505050',text:'#eeeeee',secondary:'#c2c2c2',selection:'#526c82',hover:'#505050',density:'compact',fontSize:13,relief:'subtle',motion:true,trackArtwork:false,playerArtworkDock:true,leftWidth:300,rightWidth:360,libraryStyle:'classic',windowControls:true,lyricsSize:20,lyricsInfoSide:'left',chrome:'#a0a0a0',libraryIcons:true,libraryArtwork:false,playerHeight:56,playerTextSize:14,lyricsBackground:true,lyricsBlur:48,lyricsFade:18,lyricsRomanization:true,lyricsReadingLanguage:'auto',lyricsIntegration:'auto',lyricsActiveColor:'#ffffff',lyricsEffect:'glow',lyricsProvider:'native',artworkBackground:true,lyricsCoverArtwork:true,artworkCoverArtwork:true});
+  const defaults = Object.freeze({version:1,accent:'#a4cc35',sidebar:'#414141',menu:'#424242',main:'#303030',player:'#505050',text:'#eeeeee',secondary:'#c2c2c2',selection:'#526c82',hover:'#505050',density:'compact',fontSize:13,relief:'subtle',motion:true,trackArtwork:false,playerArtworkDock:true,leftWidth:300,rightWidth:360,libraryStyle:'classic',windowControls:true,lyricsSize:20,lyricsInfoSide:'left',chrome:'#a0a0a0',libraryIcons:true,libraryArtwork:false,playerHeight:56,playerTextSize:14,lyricsBackground:true,lyricsBlur:48,lyricsFade:18,lyricsRomanization:true,lyricsReadingLanguage:'auto',lyricsIntegration:'auto',lyricsActiveColor:'#ffffff',lyricsEffect:'glow',lyricsFocus:true,lyricsAlignment:'center',lyricsProvider:'native',artworkBackground:true,lyricsCoverArtwork:true,artworkCoverArtwork:true});
   const colorKeys=['accent','sidebar','menu','main','player','text','secondary','selection','hover','chrome'];
   const presets={
     'Classic Green':{...defaults},
@@ -38,9 +38,10 @@ const RetrogradePreferences = (() => {
     if(typeof input.motion==='boolean') out.motion=input.motion;
     if(typeof input.trackArtwork==='boolean') out.trackArtwork=input.trackArtwork;
     if(typeof input.playerArtworkDock==='boolean') out.playerArtworkDock=input.playerArtworkDock;
-    for(const k of ['artworkBackground','lyricsCoverArtwork','artworkCoverArtwork','libraryIcons','libraryArtwork','lyricsBackground','lyricsRomanization'])if(typeof input[k]==='boolean')out[k]=input[k];
+    for(const k of ['lyricsFocus','artworkBackground','lyricsCoverArtwork','artworkCoverArtwork','libraryIcons','libraryArtwork','lyricsBackground','lyricsRomanization'])if(typeof input[k]==='boolean')out[k]=input[k];
     for(const [k,min,max]of [['playerHeight',48,72],['playerTextSize',12,18],['lyricsBlur',20,80],['lyricsFade',0,40]])if(typeof input[k]==='number'&&Number.isFinite(input[k]))out[k]=Math.round(Math.min(max,Math.max(min,input[k])));
     if(typeof input.windowControls==='boolean') out.windowControls=input.windowControls;
+    if(['center','left'].includes(input.lyricsAlignment))out.lyricsAlignment=input.lyricsAlignment;
     if(['native','spicy'].includes(input.lyricsProvider))out.lyricsProvider=input.lyricsProvider;
     if(['none','glow','pulse','wave'].includes(input.lyricsEffect))out.lyricsEffect=input.lyricsEffect;
     if(['auto','native','extension'].includes(input.lyricsIntegration))out.lyricsIntegration=input.lyricsIntegration;

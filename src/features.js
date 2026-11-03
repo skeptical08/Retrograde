@@ -6,7 +6,7 @@ function createRetrogradeFeatures({getSettings,setWidths,setPlayerArtworkDock,se
   const LAYOUT=1,PANEL=2,ARTIST=4,QUEUE=8,MEDIA=16,CHROME=32,ALL=63;
   const frames=createRetrogradeFrameQueue(sync),artistGeometry=new WeakMap();
   let disposed=false,dragController,lastLibraryStyle,lastWidthContext,observedRoot,dockWidth=getSettings().leftWidth;
-  const chrome=createRetrogradeChrome({getSettings,onPreferences});const lyrics=createRetrogradeLyrics({getSettings,onPreferences,onRomanization:setLyricsRomanization,renderTrack,schedule:()=>schedule(MEDIA)});
+  const chrome=createRetrogradeChrome({getSettings,onPreferences});const lyrics=createRetrogradeLyrics({getSettings,onPreferences:()=>onPreferences('lyrics'),onRomanization:setLyricsRomanization,renderTrack,schedule:()=>schedule(MEDIA)});
   const storage=()=>Spicetify.Platform?.LocalStorageAPI;
   const mark=(e,k,v='')=>{if(e.getAttribute(k)!==v){e.setAttribute(k,v);tagged.add(e);}};
   const originals=new Map();

@@ -9,7 +9,7 @@
   const data=(key,value)=>{value=String(value);if(root.dataset[key]!==value)root.dataset[key]=value;};
   const priorTokens=new Map(),ownedTokens=new Map();
   const token=(key,value)=>{if(!priorTokens.has(key))priorTokens.set(key,[root.style.getPropertyValue(key),root.style.getPropertyPriority(key)]);if(root.style.getPropertyValue(key)!==value)root.style.setProperty(key,value);ownedTokens.set(key,value);};
-  const behavior=()=>JSON.stringify([settings.libraryStyle,settings.density,settings.trackArtwork,settings.fontSize,settings.windowControls,settings.lyricsInfoSide,settings.playerArtworkDock,settings.libraryIcons,settings.libraryArtwork,settings.playerHeight,settings.playerTextSize,settings.lyricsBackground,settings.lyricsBlur,settings.lyricsFade,settings.lyricsRomanization,settings.lyricsReadingLanguage,settings.lyricsProvider,settings.lyricsEffect,settings.lyricsIntegration,settings.artworkBackground,settings.lyricsCoverArtwork,settings.artworkCoverArtwork]);
+  const behavior=()=>JSON.stringify([settings.libraryStyle,settings.density,settings.trackArtwork,settings.fontSize,settings.windowControls,settings.lyricsInfoSide,settings.lyricsFocus,settings.lyricsAlignment,settings.playerArtworkDock,settings.libraryIcons,settings.libraryArtwork,settings.playerHeight,settings.playerTextSize,settings.lyricsBackground,settings.lyricsBlur,settings.lyricsFade,settings.lyricsRomanization,settings.lyricsReadingLanguage,settings.lyricsProvider,settings.lyricsEffect,settings.lyricsIntegration,settings.artworkBackground,settings.lyricsCoverArtwork,settings.artworkCoverArtwork]);
   function apply(){
     data('retrograde','true'); data('retrogradeDensity',settings.density);
     data('retrogradeRelief',settings.relief); data('retrogradeMotion',settings.motion);
@@ -34,12 +34,14 @@
   function save(){apply();applyDensity();const next=behavior(),widths=settings.leftWidth+'|'+settings.rightWidth;if(next!==lastBehavior){lastBehavior=next;features?.update();}else if(widths!==lastWidths)features?.resize();lastWidths=widths;try{localStorage.setItem(KEY,JSON.stringify(settings));return true;}catch{return false;}}
   function element(tag,attrs={},text){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs)){if(k==='class')e.className=v;else e.setAttribute(k,v);}if(text!==undefined)e.textContent=text;return e;}
   function close(){if(!dialog)return;const old=dialog;dialog=null;old.close();old.remove();previousFocus?.focus?.();}
-  function open(){
-    if(dialog?.isConnected){dialog.focus();return;}
+  function open(scope='theme'){
+    const lyricsOnly=scope==='lyrics';
+    if(dialog?.isConnected){if(dialog.dataset.scope===(lyricsOnly?'lyrics':'theme')){dialog.focus();return;}close();}
     previousFocus=document.activeElement;
     dialog=element('dialog',{class:'rp-settings','aria-labelledby':'rp-settings-title'});
+    dialog.dataset.scope=lyricsOnly?'lyrics':'theme';
     const heading=element('header',{class:'rp-settings-header'});
-    const titleBox=element('div',{class:'rp-preferences-brand'});const logo=element('img',{class:'rp-classic-logo',src:RetrogradeLogo,alt:'Classic Spotify logo',width:'52',height:'52'});titleBox.append(logo,element('h2',{id:'rp-settings-title'},'Preferences'));
+    const titleBox=element('div',{class:'rp-preferences-brand'});const logo=element('img',{class:'rp-classic-logo',src:RetrogradeLogo,alt:'Classic Spotify logo',width:'52',height:'52'});titleBox.append(logo,element('h2',{id:'rp-settings-title'},lyricsOnly?'Lyrics preferences':'Preferences'));
     const x=element('button',{type:'button',class:'rp-close','aria-label':'Close theme settings'});x.innerHTML='<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path d="m3 3 10 10M13 3 3 13" fill="none" stroke="currentColor" stroke-width="2"/></svg>';x.onclick=close;
     heading.append(titleBox,x);
     const body=element('div',{class:'rp-settings-body'});
@@ -47,7 +49,7 @@
     const refs=new Map();
     const status=element('p',{class:'rp-status',role:'status','aria-live':'polite'});
     function report(){
-      const pairs=[['text','main'],['text','sidebar'],['text','menu'],['text','player'],['secondary','main'],['text','selection'],['text','hover']];
+      const pairs=lyricsOnly?[['lyricsActiveColor','main']]:[['text','main'],['text','sidebar'],['text','menu'],['text','player'],['secondary','main'],['text','selection'],['text','hover']];
       const low=pairs.filter(([a,b])=>P.contrast(settings[a],settings[b])<4.5);
       status.textContent=low.length?'Low contrast: '+low.map(([a,b])=>`${a} on ${b}`).join(', ')+'. Consider adjusting these colors.':'All checked text and surface pairs meet 4.5:1 contrast.';
       status.dataset.warning=String(low.length>0);
@@ -60,9 +62,9 @@
       const swatch=element('span',{'aria-hidden':'true'});swatch.style.background=preset.accent;b.prepend(swatch);
       b.dataset.preset=name;b.onclick=()=>{settings=P.applyPreset(settings,preset);changed();sync();};presets.append(b);
     }
-    body.append(element('h3',{},'Color scheme'),presets);
+    if(!lyricsOnly)body.append(element('h3',{},'Color scheme'),presets);
     const grid=element('div',{class:'rp-settings-grid'});
-    function group(title,description){const field=element('fieldset',{class:'rp-preference-group'});field.append(element('legend',{},title),element('p',{class:'rp-group-description'},description));grid.append(field);return field;}
+    function group(title,description){const field=element('fieldset',{class:'rp-preference-group'});field.append(element('legend',{},title),element('p',{class:'rp-group-description'},description));field.hidden=lyricsOnly&&!['Lyrics & artwork','Word timing · optional'].includes(title);grid.append(field);return field;}
     function option(field,k,label,description,control){const row=element('div',{class:'rp-option'}),copy=element('div',{class:'rp-option-copy'});copy.append(element('label',{for:'rp-'+k},label));if(description){const help=element('p',{id:'rp-'+k+'-help',class:'rp-option-help'},description);copy.append(help);control.setAttribute('aria-describedby',help.id);}row.append(copy,control);field.append(row);refs.set(k,{control});return control;}
     function select(field,k,label,description,options){const s=element('select',{id:'rp-'+k});for(const[value,text]of options)s.append(element('option',{value},text));s.onchange=()=>{settings[k]=s.value;changed();};return option(field,k,label,description,s);}
     function toggle(field,k,label,description){const input=element('input',{id:'rp-'+k,type:'checkbox'});input.onchange=()=>{settings[k]=input.checked;changed();};return option(field,k,label,description,input);}
@@ -89,6 +91,8 @@
     number(player,'playerHeight','Playback strip height (px)','Increase room around controls without changing their alignment.',48,72,2);
     number(player,'playerTextSize','Song details text size (px)','Applies to the title and artist in both layouts. Compact text is limited by strip height to prevent clipping.',12,18);
     const lyrics=group('Lyrics & artwork','Customize the listening view. Native lyrics use Spotify timing; optional timestamped lyrics use Retrograde’s karaoke renderer.');
+    toggle(lyrics,'lyricsFocus','Focus on the current line','Gently soften upcoming and previous lines. Text stays selectable and lines retain their native seek behavior.');
+    select(lyrics,'lyricsAlignment','Lyric alignment','Center for a balanced listening room, or align left for a reading layout.',[['center','Centered'],['left','Left aligned']]);
     select(lyrics,'lyricsIntegration','Lyrics extension compatibility','Auto yields to detected custom lyric views. Extension-owned also supports other lyric plugins. Retrograde native forces this theme’s listening layout.',[['auto','Automatic'],['extension','Extension-owned'],['native','Retrograde native']]);
     const providerControls=group('Word timing · optional','Native lyrics work without an account. These advanced controls are for an authorized timing provider or your own local timing file.');
     select(providerControls,'lyricsProvider','Word-timing provider','Native lyrics need no provider key. Optional Spicy Lyrics access needs an approved client setup; requests include the track ID and your provider key, never your Spotify token.',[['native','Spotify native'],['spicy','Spicy API (optional)']]);
@@ -115,9 +119,9 @@
     number(windows,'rightWidth','Queue / Now Playing width (px)','Available content width may limit large sidebar sizes.',240,640,10);
     body.append(grid,status);
     const foot=element('footer',{class:'rp-settings-footer'}),reset=element('button',{type:'button',class:'rp-secondary'},'Reset to defaults'),done=element('button',{type:'button',class:'rp-primary'},'Done');
-    reset.onclick=()=>{settings={...P.defaults};changed();sync();};done.onclick=close;
+    reset.onclick=()=>{if(lyricsOnly){for(const key of Object.keys(settings))if(key.startsWith('lyrics')||key.startsWith('artwork'))settings[key]=P.defaults[key];}else settings={...P.defaults};changed();sync();};done.onclick=close;
     foot.append(reset,element('span',{},'Retrograde 1.0'),done);
-    dialog.append(heading,body,foot);dialog.addEventListener('cancel',e=>{e.preventDefault();close();});
+    dialog.append(heading,body,foot);dialog.addEventListener('cancel',e=>{e.preventDefault();e.stopPropagation();close();});dialog.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();close();}},{capture:true});
     document.body.append(dialog);sync();dialog.showModal();x.focus();
   }
   function ready(attempt=0){
@@ -135,7 +139,7 @@
     lastBehavior=behavior();lastWidths=settings.leftWidth+'|'+settings.rightWidth;features=createRetrogradeFeatures({getSettings:()=>settings,onPreferences:open,setLyricsRomanization:value=>{settings.lyricsRomanization=!!value;save();},setPlayerArtworkDock:value=>{settings.playerArtworkDock=!!value;save();},setWidths:(left,right,commit)=>{settings.leftWidth=left;settings.rightWidth=right;if(commit)save();},preferences:P});
   }
   apply();ready();
-  window.Retrograde={openSettings:open,importTimedLyrics:input=>features?.importTiming(input),clearTimedLyrics:()=>features?.clearTiming(),romanizeLyrics:RetrogradeRomanization.convert,getSettings:()=>({...settings}),getDiagnostics:()=>features?.diagnostics(),dispose(){if(disposed)return;disposed=true;marketplaceLifecycle?.dispose();clearTimeout(timer);features?.dispose();close();menu?.deregister();if(topbar){topbar.onClick=()=>{};topbar.element.style.setProperty('display','none','important');}delete root.dataset.retrograde;delete root.dataset.retrogradeDensity;delete root.dataset.retrogradeRelief;delete root.dataset.retrogradeMotion;delete root.dataset.retrogradeTrackArtwork;for(const name of ['retrogradeLibrary','retrogradeLibraryArtwork','retrogradeLibraryIcons','retrogradeLyricsBackground','retrogradePage','retrogradeMedia','retrogradeMediaQueue','retrogradeLyricsOwner','retrogradeExternalLyrics','retrogradeFullscreen','retrogradeArtworkBackground','retrogradeLyricsCoverArtwork','retrogradeArtworkCoverArtwork'])delete root.dataset[name];for(const [key,[value,priority]]of priorTokens){if(root.style.getPropertyValue(key)!==ownedTokens.get(key))continue;if(value)root.style.setProperty(key,value,priority);else root.style.removeProperty(key);}}};
+  window.Retrograde={openSettings:open,openLyricsSettings:()=>open('lyrics'),importTimedLyrics:input=>features?.importTiming(input),clearTimedLyrics:()=>features?.clearTiming(),romanizeLyrics:RetrogradeRomanization.convert,getSettings:()=>({...settings}),getDiagnostics:()=>features?.diagnostics(),dispose(){if(disposed)return;disposed=true;marketplaceLifecycle?.dispose();clearTimeout(timer);features?.dispose();close();menu?.deregister();if(topbar){topbar.onClick=()=>{};topbar.element.style.setProperty('display','none','important');}delete root.dataset.retrograde;delete root.dataset.retrogradeDensity;delete root.dataset.retrogradeRelief;delete root.dataset.retrogradeMotion;delete root.dataset.retrogradeTrackArtwork;for(const name of ['retrogradeLibrary','retrogradeLibraryArtwork','retrogradeLibraryIcons','retrogradeLyricsBackground','retrogradePage','retrogradeMedia','retrogradeMediaQueue','retrogradeLyricsOwner','retrogradeExternalLyrics','retrogradeFullscreen','retrogradeArtworkBackground','retrogradeLyricsCoverArtwork','retrogradeArtworkCoverArtwork'])delete root.dataset[name];for(const [key,[value,priority]]of priorTokens){if(root.style.getPropertyValue(key)!==ownedTokens.get(key))continue;if(value)root.style.setProperty(key,value,priority);else root.style.removeProperty(key);}}};
   marketplaceLifecycle=createRetrogradeMarketplaceLifecycle({script:loadedScript,document,onDeactivate:()=>window.Retrograde?.dispose()});
 })();
 

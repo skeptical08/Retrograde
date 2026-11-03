@@ -10,7 +10,7 @@ await fs.mkdir(path.join(out,'dist'),{recursive:true});
 await fs.cp(path.join(root,'dist/Retrograde'),path.join(out,'dist/Retrograde'),{recursive:true});
 await fs.mkdir(path.join(out,'docs'),{recursive:true});
 await fs.cp(path.join(root,'docs/gallery'),path.join(out,'docs/gallery'),{recursive:true});
-for(const item of ['DEVELOPMENT.md','PERFORMANCE.md','THIRD_PARTY.md','MARKETPLACE.md','PLAYER-REFINEMENT.md','READABILITY-REFINEMENT.md','ROMANIZATION-LICENSES.md','LYRICS-VERIFICATION.md','LYRICS-EXTENSIONS.md','RETROGRADE-LYRICS.md','KARAOKE-SETUP.md','PROVIDER-TEMPLATE-DRAFT.md','Throwback-LICENSE.txt']){
+for(const item of ['DEVELOPMENT.md','PERFORMANCE.md','THIRD_PARTY.md','MARKETPLACE.md','PLAYER-REFINEMENT.md','READABILITY-REFINEMENT.md','ROMANIZATION-LICENSES.md','LYRICS-VERIFICATION.md','LYRICS-EXTENSIONS.md','RETROGRADE-LYRICS.md','LISTENING-REFINEMENT.md','PROVIDER-TRANSPORT.md','KARAOKE-SETUP.md','PROVIDER-TEMPLATE-DRAFT.md','Throwback-LICENSE.txt']){
   await fs.copyFile(path.join(root,'docs',item),path.join(out,'docs',item));
 }
 console.log(`Prepared public repository at ${out}`);
