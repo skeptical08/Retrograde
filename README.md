@@ -8,7 +8,7 @@ An early-2010s Spotify desktop theme: graphite panels, silver controls, compact 
 
 ### Expanded artwork or a compact player
 
-The artwork and track-details band form one flush block above the playback strip. Hover over the cover to reveal the top-right collapse button, or focus it with the keyboard. It moves the artwork and details completely into the playback bar. Hover over the compact thumbnail to expand again, or use **Preferences → Artwork above playback bar**. The choice saves locally and survives restart.
+The artwork and track-details band form one flush block above the playback strip. Hover over the cover to reveal the top-right collapse button, or focus it with the keyboard. It moves the artwork and details completely into the playback bar. Hover over the compact thumbnail to expand again, or use **Preferences → Playback bar → Expanded album artwork**. The choice saves locally and survives restart. The lyric view temporarily uses the compact playback strip, then restores your saved artwork choice when closed.
 
 ![Expanded artwork flush with the playback strip](docs/gallery/player-expanded.png)
 
@@ -16,7 +16,7 @@ The artwork and track-details band form one flush block above the playback strip
 
 ### Classic controls and compact tables
 
-Silver chrome, graphite surfaces, clear column headers and a slim playback strip bring the early Spotify desktop back into focus. The native song artwork and details sit above the lower-left transport controls, just like the classic desktop; collapsing the library keeps a compact song widget inside the strip.
+Silver chrome, graphite surfaces, clear column headers and a slim playback strip bring the early Spotify desktop back into focus. The native song artwork and details sit above the lower-left transport controls, just like the classic desktop; the artwork dock and library now collapse independently.
 
 ![Album view with compact track tables and classic controls](docs/gallery/album.png)
 
@@ -30,7 +30,7 @@ Home keeps dense discovery shelves on a solid graphite surface. Artist pages ret
 
 ### Lyrics with room to breathe
 
-Centered native lyrics, a larger highlighted current line and a framed artwork card. Move the song information left or right in Preferences; the library rail and an open Queue keep their space.
+Centered native lyrics, a larger highlighted current line, a blurred album backdrop and a framed artwork card. Japanese, Korean and Mandarin phonetic readings can appear below the original lines; toggle them with **Aa** in the lyric toolbar or **Preferences → Lyrics & artwork → Phonetic lyric readings**. Japanese dictionaries download on first use; original lyrics remain visible while loading or if unavailable. Move the song information left or right in Preferences; the library rail and an open Queue keep their space.
 
 ![Native lyrics with a framed artwork and album information card](docs/gallery/lyrics.png)
 
@@ -45,9 +45,9 @@ The Queue uses dense Track/Artist rows. Now Playing focuses on cover art, title,
 
 ### Your palette, your preferences
 
-Start with one of ten curated schemes, then adjust colors, density, typography, track artwork, sidebar widths and motion. Changes preview immediately and save locally.
+Start with one of eighteen curated schemes, then adjust colors, density, typography, track artwork, sidebar widths and motion. Changes preview immediately and save locally.
 
-![Retrograde Preferences with ten color presets and editable palette and layout controls](docs/gallery/preferences.png)
+![Retrograde Preferences with eighteen color presets and editable palette and layout controls](docs/gallery/preferences.png)
 
 The same album page in four alternative schemes; Classic Green is shown above. Click an image to inspect the full client capture.
 
@@ -63,8 +63,9 @@ All images are captures from the actual Windows Spotify client running Retrograd
 
 - Classic library rows and Track/Artist Queue tables.
 - Resizable sidebars with sensible width limits.
-- Native lyrics framed by the library and Queue, with an artwork/metadata card.
-- Ten color presets and editable accent, surface, text, selection and hover colors.
+- Native lyrics framed by the library and Queue, with a blurred album backdrop, artwork/metadata card and local phonetic readings for Japanese, Korean and Mandarin.
+- Eighteen complete color presets, including Paper & Ink, with editable chrome tint and surface colors.
+- Grouped, described Preferences for player height and song text, leading library symbols and optional trailing cover thumbnails and blurred album backdrops.
 - Compact/comfortable density, optional track artwork, text/lyrics sizes, relief and reduced motion.
 - Native playback, search, context menus, navigation and virtualized scrolling.
 - Subtle remote-device status above the timeline; click it to open Spotify's device picker without adding another playback-bar row.
@@ -123,3 +124,9 @@ Editable source and reproducible build scripts are included. No npm dependencies
 ## Credits and license
 
 Inspired by [Spicetify Throwback](https://github.com/bluedrift/Spicetify-Throwback) and historical Spotify desktop interfaces. See [third-party notices](docs/THIRD_PARTY.md). Retrograde's original code is MIT licensed. Spotify names/logos and displayed artwork remain their owners' property. This is an unofficial project, unaffiliated with Spotify.
+
+### Lyrics extension compatibility
+Automatic compatibility yields the listening layout, animation and romanization to detected Spicy Lyrics, Beautiful Lyrics, Simple Beautiful Lyrics and Lyrics Plus views. More Lyrics keeps the native layout because it supplies providers. Under Preferences → Lyrics & artwork, choose Extension-owned for another presentation plugin, or Retrograde native to use this theme’s own layout. Use the extension’s romanization controls in extension-owned views. See [compatibility notes](docs/LYRICS-EXTENSIONS.md) for the tested scope.
+
+## Retrograde Lyrics — included
+Retrograde’s companion script includes [Retrograde Lyrics](docs/RETROGRADE-LYRICS.md): immersive fullscreen, its own song-card transport, white/custom active lyrics, separate cover/backdrop toggles, optional glow and letter waves, and romanization. No separate lyrics extension install is needed. Native effects follow line timing. A genuine word-timed renderer is included for supplied timestamps; automatic provider setup is pending authorization. See [word-timing setup](docs/KARAOKE-SETUP.md).

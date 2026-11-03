@@ -1,6 +1,6 @@
 {
   "name": "Retrograde",
-  "description": "An early-2010s Spotify desktop theme with graphite panels, silver controls, classic track tables and customizable colors.",
+  "description": "An early-2010s Spotify desktop theme with graphite panels, silver controls, classic track tables, customizable colors and bundled Retrograde Lyrics.",
   "preview": "preview.png",
   "readme": "README.md",
   "usercss": "dist/Retrograde/user.css",
