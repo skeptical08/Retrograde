@@ -1,0 +1,10 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import vm from 'node:vm';
+const C=vm.runInNewContext((await fs.readFile(new URL('../src/lyrics-compat.js',import.meta.url),'utf8'))+';RetrogradeLyricsCompatibility');
+const doc=(...selectors)=>({querySelector:s=>selectors.includes(s)?{querySelector:t=>selectors.includes(t)?{}:null}:null});
+test('custom view paths yield without requiring an extension global',()=>{for(const path of ['/SpicyLyrics','/SpicyLyrics/Update','/BeautifulLyrics/Page','/BeautifulLyrics/Fullscreen','/lyrics-plus'])assert.ok(C.owner(doc(),path));assert.equal(C.owner(doc(),'/album/example'),'');});
+test('source-backed extension roots detect late mounts and Simple background',()=>{assert.equal(C.owner(doc('#SpicyLyricsPage')),'spicy');assert.equal(C.owner(doc('.BeautifulLyricsPage')),'beautiful');assert.equal(C.owner(doc('#main-view','.lyrics-background-container')),'simple-beautiful');assert.equal(C.owner(doc(),'/',doc('.lyrics-background-container')),'simple-beautiful');});
+test('More Lyrics keeps native presentation; manual modes are bounded to active views',()=>{assert.equal(C.policy('auto','').external,false);assert.equal(C.policy('auto','spicy').external,true);assert.equal(C.policy('native','spicy').external,false);assert.equal(C.policy('extension','',true).external,true);assert.equal(C.policy('extension','',false).external,false);});
+test('only added or removed extension containers trigger compatibility checks',()=>{const root={nodeType:1,matches:()=>true,querySelector:()=>null},line={nodeType:1,matches:()=>false,querySelector:()=>null};assert.equal(C.relevant([{addedNodes:[root],removedNodes:[]}]),true);assert.equal(C.relevant([{addedNodes:[],removedNodes:[root]}]),true);assert.equal(C.relevant([{addedNodes:[line],removedNodes:[]}]),false);});

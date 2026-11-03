@@ -44,7 +44,7 @@ test('presets preserve non-color preferences across all finite layout combinatio
   for(const k of P.colorKeys)assert.equal(result[k],preset[k],k);
   assert.deepEqual(plain(P.sanitize(JSON.parse(JSON.stringify(result)))),plain(result));checked++;
  }
- assert.equal(checked,17280);
+ assert.equal(checked,Object.keys(P.presets).length*1728);
 });
 test('new controls recover invalid values and bound lyric typography',()=>{
  const s=P.sanitize({...P.defaults,libraryStyle:'broken',windowControls:'yes',lyricsSize:100});assert.equal(s.libraryStyle,'classic');assert.equal(s.windowControls,true);assert.equal(s.lyricsSize,28);
@@ -64,3 +64,31 @@ test('player artwork preference migrates, persists and survives palette changes'
  assert.equal(P.sanitize({...P.defaults,playerArtworkDock:'false'}).playerArtworkDock,true);
  for(const preset of Object.values(P.presets))assert.equal(P.applyPreset(compact,preset).playerArtworkDock,false);
 });
+
+test('readability and backdrop preferences migrate, validate and survive every preset',()=>{
+ const old=P.sanitize({version:1});assert.equal(old.playerHeight,56);assert.equal(old.playerTextSize,14);assert.equal(old.libraryIcons,true);assert.equal(old.lyricsBackground,true);
+ const settings=P.sanitize({...P.defaults,playerHeight:1000,playerTextSize:0,lyricsBlur:Infinity,lyricsFade:-10,libraryIcons:false,lyricsBackground:false});
+ assert.equal(settings.playerHeight,72);assert.equal(settings.playerTextSize,12);assert.equal(settings.lyricsBlur,48);assert.equal(settings.lyricsFade,0);
+ for(const preset of Object.values(P.presets)){
+  const roundtrip=P.sanitize(JSON.parse(JSON.stringify(P.applyPreset(settings,preset))));
+  for(const k of ['playerHeight','playerTextSize','lyricsBlur','lyricsFade','libraryIcons','lyricsBackground'])assert.equal(roundtrip[k],settings[k]);
+  for(const k of P.colorKeys)assert.match(roundtrip[k],/^#[0-9a-f]{6}$/);
+ }
+});
+test('romanization preference migrates and retains off across all palettes',()=>{
+ assert.equal(P.sanitize({version:1}).lyricsRomanization,true);assert.equal(P.sanitize({...P.defaults,lyricsRomanization:'false'}).lyricsRomanization,true);
+ const off=P.sanitize(JSON.parse(JSON.stringify({...P.defaults,lyricsRomanization:false})));for(const preset of Object.values(P.presets))assert.equal(P.applyPreset(off,preset).lyricsRomanization,false);
+});
+
+test('library covers migrate independently of the legacy symbol preference',()=>{
+ assert.equal(P.sanitize({version:1,libraryIcons:false}).libraryArtwork,false);
+ for(const enabled of [true,false]){const s=P.sanitize({...P.defaults,libraryArtwork:enabled});for(const preset of Object.values(P.presets))assert.equal(P.applyPreset(s,preset).libraryArtwork,enabled);assert.equal(P.sanitize(JSON.parse(JSON.stringify(s))).libraryArtwork,enabled);}
+});
+
+test('lyrics compatibility mode migrates and survives palette changes',()=>{assert.equal(P.sanitize({version:1}).lyricsIntegration,'auto');assert.equal(P.sanitize({...P.defaults,lyricsIntegration:'bad'}).lyricsIntegration,'auto');for(const mode of ['auto','native','extension'])for(const p of Object.values(P.presets))assert.equal(P.applyPreset({...P.defaults,lyricsIntegration:mode},p).lyricsIntegration,mode);});
+
+test('listening color and independent artwork preferences migrate and persist',()=>{const old=P.sanitize({version:1,lyricsBackground:false});assert.equal(old.lyricsActiveColor,'#ffffff');assert.equal(old.lyricsBackground,false);assert.equal(old.artworkBackground,true);for(const p of Object.values(P.presets)){const s=P.applyPreset({...P.defaults,lyricsActiveColor:'#aabbcc',lyricsBackground:false,artworkBackground:true,lyricsCoverArtwork:false,artworkCoverArtwork:true},p);assert.equal(s.lyricsActiveColor,'#aabbcc');assert.equal(s.lyricsBackground,false);assert.equal(s.artworkBackground,true);assert.equal(s.lyricsCoverArtwork,false);assert.equal(s.artworkCoverArtwork,true);}assert.equal(P.sanitize({...P.defaults,lyricsActiveColor:'url(bad)'}).lyricsActiveColor,'#ffffff');});
+
+test('lyric effects validate without changing the selected motion preference',()=>{assert.equal(P.sanitize({version:1}).lyricsEffect,'glow');assert.equal(P.sanitize({...P.defaults,lyricsEffect:'bad'}).lyricsEffect,'glow');for(const effect of ['none','glow','pulse','wave']){const s=P.sanitize({...P.defaults,lyricsEffect:effect,motion:false});assert.equal(s.lyricsEffect,effect);assert.equal(s.motion,false);}});
+
+test('optional timing provider is opt-in and independent of palettes',()=>{assert.equal(P.sanitize({version:1}).lyricsProvider,'native');assert.equal(P.sanitize({...P.defaults,lyricsProvider:'bad'}).lyricsProvider,'native');for(const p of Object.values(P.presets))assert.equal(P.applyPreset({...P.defaults,lyricsProvider:'spicy'},p).lyricsProvider,'spicy');});
