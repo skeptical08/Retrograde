@@ -16,3 +16,8 @@ src/spotify-classic.png is a transparent cutout of the historical Spotify logo i
 - Xumi (README declares MIT) was consulted for window-state and title-bar endpoint semantics: https://github.com/TokyoTF/Xumi. No Xumi code, styles, artwork or settings system is bundled.
 - Spicy Lyrics (AGPL-3.0): https://github.com/Spikerko/spicy-lyrics; and SplashFix Lyrics Overlay (Apache-2.0): https://github.com/SplashFix/spicetify-lyrics-plus. These informed artwork/lyrics composition only. No code, assets, extension or lyric provider from those projects is bundled.
 - Marketplace's publication guide and loading/removal implementation informed the manifest and lifecycle integration: https://github.com/spicetify/marketplace. No Marketplace code is bundled.
+## Romanization engines
+
+The bundled, lazy-initialized browser builds are Kuroshiro 1.2.0, kuroshiro-analyzer-kuromoji 1.1.0, Aromanize 0.1.5 and pinyin-pro 3.28.1. The Japanese analyzer uses kuromoji 0.1.2 dictionaries. Full licenses, transitive notices and dictionary notices are retained in ROMANIZATION-LICENSES.md. Original vendor files are checked in under src/vendor; the build repairs only the Japanese loader's malformed HTTPS URL and adds a dictionary-request timeout. Global XMLHttpRequest and String prototypes are not patched.
+
+Spicetify's Lyrics Plus Translator.js was consulted for its engine choices: https://github.com/spicetify/cli/blob/main/CustomApps/lyrics-plus/Translator.js. No Translator.js implementation is bundled; Retrograde uses its own event-driven native-line integration.

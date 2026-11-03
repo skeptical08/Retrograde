@@ -31,3 +31,6 @@ The topic is the discovery mechanism, not an approval or compatibility certifica
 The theme is published and discoverable. This is not a compatibility certification for other Spotify/Spicetify versions or platforms.
 
 Official reference: https://github.com/spicetify/marketplace/wiki/Publishing-to-Marketplace
+
+## Pending local update — 2026-11-02
+Public release remains v1.0.1. The local 1.0.3 candidate includes readability, romanization and corrected library artwork controls. It is not published: GitHub file writes returned 403 Resource not accessible by integration, and the publishing browser was unavailable. The prepared source archive can be uploaded when repository write access is restored. Local checks now include 24 passing tests.
