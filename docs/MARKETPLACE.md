@@ -32,5 +32,8 @@ The theme is published and discoverable. This is not a compatibility certificati
 
 Official reference: https://github.com/spicetify/marketplace/wiki/Publishing-to-Marketplace
 
-## Pending local update — 2026-11-02
-Public release remains v1.0.1. The local 1.0.3 candidate includes readability, romanization and corrected library artwork controls. It is not published: GitHub file writes returned 403 Resource not accessible by integration, and the publishing browser was unavailable. The prepared source archive can be uploaded when repository write access is restored. Local checks now include 24 passing tests.
+## Bundled lyrics publication — 2026-11-02
+
+The complete 1.0.3 package was published through [pull request #1](https://github.com/skeptical08/Retrograde/pull/1). Visible theme branding remains Retrograde 1.0. GitHub passed build, all 44 tests, manifest validation and generated-file reproducibility before merge. The live GitHub Pages companion returned HTTP 200 with application/javascript and exactly matched the normalized public build, including the independent karaoke renderer.
+
+Retrograde Lyrics installs with the existing theme companion script. No separate extension installation is needed. See RETROGRADE-LYRICS.md and KARAOKE-SETUP.md. Native lyrics remain the default. Automatic word-timing provider approval is pending; no keys are included or applications created. Source-audited third-party compatibility and scoped real-client tests are documented without claiming every provider or plugin version is certified.
