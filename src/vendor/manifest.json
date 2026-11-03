@@ -1,0 +1,14 @@
+{
+  "korean": {
+    "sha256": "3f7961a39c976da85b79789ba480dfa4ac665efde009a735e426f52d18f95f00"
+  },
+  "pinyin": {
+    "sha256": "66882dd437128a321bd1e03c5de6729e4723170578ba387812180b0aabca338f"
+  },
+  "kuroshiro": {
+    "sha256": "e3e609355449b1ddb4f56253402aa7fc544743df3346028e56a121f03d0717e6"
+  },
+  "analyzer": {
+    "sha256": "bf894edfb6908a5598e6e7e8ff8c70c5ef95a63d1235c252736b5aa838cbfed1"
+  }
+}
