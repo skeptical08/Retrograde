@@ -2,6 +2,14 @@
 
 ## Retrograde 1.0
 
+### Listening refinement
+
+- Stable lyrics/Queue/player geometry across native idle changes.
+- Responsive song card, fluid focus typography and saved alignment.
+- Separate in-window Cinema and system fullscreen, with themed vector transport and inset sliders.
+- Dedicated lyrics-only Preferences and modal Escape handling.
+- 48 automated tests and targeted live scaling/idle checks; see docs/LISTENING-REFINEMENT.md.
+
 ### Lyrics and Queue completion
 
 - Dark text on the Queue's silver section headers and tabs, including narrow panels.

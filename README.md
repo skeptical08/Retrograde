@@ -130,3 +130,13 @@ Automatic compatibility yields the listening layout, animation and romanization 
 
 ## Retrograde Lyrics — included
 Retrograde’s companion script includes [Retrograde Lyrics](docs/RETROGRADE-LYRICS.md): immersive fullscreen, its own song-card transport, white/custom active lyrics, separate cover/backdrop toggles, optional glow and letter waves, and romanization. No separate lyrics extension install is needed. Native effects follow line timing. A genuine word-timed renderer is included for supplied timestamps; automatic provider setup is pending authorization. See [word-timing setup](docs/KARAOKE-SETUP.md).
+
+## Refined listening modes
+
+Open Lyrics, then choose **Cinema** to fill Spotify’s window or **Fullscreen** to fill the display. Both use Retrograde’s silver transport below the song card. **Lyrics preferences** opens only listening settings, including saved focus and alignment. The layout adapts to narrower windows and keeps the Queue and player stable during cursor idle. See the [refinement and actual verification record](docs/LISTENING-REFINEMENT.md).
+
+![Retrograde fullscreen with themed transport](docs/gallery/listening-fullscreen.jpg)
+
+![Narrow lyrics view with Queue](docs/gallery/listening-narrow.jpg)
+
+![Dedicated lyrics Preferences](docs/gallery/listening-preferences.jpg)
