@@ -1,12 +1,12 @@
 /* Spotify 1.3.6 compatibility: native sidebar size preferences, a minimal NPV,
    and a fully-rendered artist Popular table. React-owned nodes are never moved. */
-function createRetrogradeFeatures({getSettings,setWidths,setPlayerArtworkDock,preferences,onPreferences}) {
+function createRetrogradeFeatures({getSettings,setWidths,setPlayerArtworkDock,setLyricsRomanization,preferences,onPreferences}) {
   const controller=new AbortController(),signal=controller.signal;
   const handles=new Map(),headers=new Set(),tagged=new Set(),stats={syncs:0,lastMs:0,maxMs:0,totalMs:0,passes:{layout:0,panel:0,artist:0,queue:0,media:0,chrome:0}};
   const LAYOUT=1,PANEL=2,ARTIST=4,QUEUE=8,MEDIA=16,CHROME=32,ALL=63;
   const frames=createRetrogradeFrameQueue(sync),artistGeometry=new WeakMap();
-  let disposed=false,dragController,lastLibraryStyle,lastWidthContext,observedRoot;
-  const chrome=createRetrogradeChrome({getSettings,onPreferences});const lyrics=createRetrogradeLyrics({getSettings,renderTrack,schedule:()=>schedule(MEDIA)});
+  let disposed=false,dragController,lastLibraryStyle,lastWidthContext,observedRoot,dockWidth=getSettings().leftWidth;
+  const chrome=createRetrogradeChrome({getSettings,onPreferences});const lyrics=createRetrogradeLyrics({getSettings,onPreferences,onRomanization:setLyricsRomanization,renderTrack,schedule:()=>schedule(MEDIA)});
   const storage=()=>Spicetify.Platform?.LocalStorageAPI;
   const mark=(e,k,v='')=>{if(e.getAttribute(k)!==v){e.setAttribute(k,v);tagged.add(e);}};
   const originals=new Map();
@@ -29,7 +29,7 @@ function createRetrogradeFeatures({getSettings,setWidths,setPlayerArtworkDock,pr
       const label=expanded?'Collapse artwork into playback bar':'Expand artwork above playback bar';
       if(toggle.getAttribute('aria-label')!==label){toggle.setAttribute('aria-label',label);toggle.title=label;}
       toggle.setAttribute('aria-expanded',String(expanded));
-      toggle.hidden=!!document.querySelector('#Desktop_LeftSidebar_Id .main-yourLibraryX-headerIsCollapsed');
+      toggle.hidden=false;
     }
     // Spotify supplies a 56px thumbnail for its original mini-widget. Its own
     // CDN size variant keeps the enlarged native cover sharp without a fetch loop.
@@ -56,7 +56,7 @@ function createRetrogradeFeatures({getSettings,setWidths,setPlayerArtworkDock,pr
       if(e.closest('#Desktop_PanelContainer_Id')){flags|=PANEL|QUEUE|MEDIA;continue;}
       if(e.closest('[data-testid="artist-page"]')){flags|=ARTIST;continue;}
       // Playlist/Home virtualizers are styled through CSS, not rescanned.
-      if(e.closest('#main-view')){if(Spicetify.Platform.History.location.pathname.startsWith('/artist/'))flags|=ARTIST;continue;}
+      if(e.closest('#main-view')){if(RetrogradeLyricsCompatibility.relevant([r]))flags|=MEDIA;if(Spicetify.Platform.History.location.pathname.startsWith('/artist/'))flags|=ARTIST;continue;}
       if(e===observedRoot||e.closest('.Root__top-container'))flags|=LAYOUT|PANEL|ARTIST|QUEUE|MEDIA|CHROME;
     }
     if(flags)schedule(flags);
@@ -68,15 +68,17 @@ function createRetrogradeFeatures({getSettings,setWidths,setPlayerArtworkDock,pr
   function watchSize(e){if(e&&!roots.has(e)){roots.add(e);resize.observe(e);}}
   function libraryLayout(geometry){
     const left=document.querySelector('#Desktop_LeftSidebar_Id'),nav=left?.querySelector('nav'),api=storage();if(!nav)return;
-    if(api&&lastLibraryStyle!==getSettings().libraryStyle){nativeSet('items-view',getSettings().libraryStyle==='classic'?2:0);lastLibraryStyle=getSettings().libraryStyle;}
+    const libraryView=getSettings().libraryStyle==='classic'&&!getSettings().libraryArtwork?2:0;
+    if(api&&lastLibraryStyle!==libraryView){nativeSet('items-view',libraryView);lastLibraryStyle=libraryView;}
     const path=Spicetify.Platform.History.location.pathname;mark(document.documentElement,'data-retrograde-page',path==='/'?'home':path.includes('lyrics')?'lyrics':'content');
     mark(left,'data-rp-collapsed',String(!!left.querySelector('.main-yourLibraryX-headerIsCollapsed')));
     // Size the native player's artwork dock from the actual library geometry.
     // CSS repositions the existing widget; React ownership and menus are retained.
-    const docked=getSettings().playerArtworkDock!==false&&!left.querySelector('.main-yourLibraryX-headerIsCollapsed')&&(geometry.rects.left?.width||0)>=180;
+    const docked=getSettings().playerArtworkDock!==false&&!lyrics.isOpen();
     mark(document.documentElement,'data-rp-player-docked',String(docked));
     playerArtwork();
-    override(document.documentElement,'--rp-player-library-width',Math.round(geometry.rects.left?.width||300)+'px');
+    if(!left.querySelector('.main-yourLibraryX-headerIsCollapsed'))dockWidth=geometry.rects.left?.width||getSettings().leftWidth;
+    override(document.documentElement,'--rp-player-library-width',Math.max(200,Math.round(dockWidth))+'px');
     // Remove the older generated duplicate; the native widget is the dock.
     nav.querySelector('.rp-library-dock')?.remove();
     mark(left,'data-rp-narrow',String((geometry.rects.left?.width||0)<320));
@@ -142,7 +144,7 @@ function createRetrogradeFeatures({getSettings,setWidths,setPlayerArtworkDock,pr
     const heading=[...native.querySelectorAll('h2')].find(h=>/^About the artist$/i.test(h.textContent.trim()));
     let card=heading;
     if(card){while(card.parentElement&&card.parentElement!==native&&[...card.parentElement.querySelectorAll('h2')].every(h=>h===heading))card=card.parentElement;mark(card,'data-rp-about-card');const follow=[...card.querySelectorAll('button')].find(b=>/^(Follow|Following)$/.test(b.textContent.trim()));if(follow?.parentElement)mark(follow.parentElement,'data-rp-about-metrics');}
-    function filter(parent){for(const child of parent.children){if(child===summary)continue;if(card&&(child===card||child.contains(card))){if(child.hasAttribute('data-rp-npv-hidden'))child.removeAttribute('data-rp-npv-hidden');if(child!==card){mark(child,'data-rp-npv-path');filter(child);}}else mark(child,'data-rp-npv-hidden');}}
+    function filter(parent){for(const child of parent.children){if(child===summary)continue;if(child.matches(RetrogradeLyricsCompatibility.cards)||child.querySelector(RetrogradeLyricsCompatibility.cards)){child.removeAttribute('data-rp-npv-hidden');for(const card of child.querySelectorAll(RetrogradeLyricsCompatibility.cards)){let p=card;while(p&&p!==child){p.removeAttribute('data-rp-npv-hidden');p=p.parentElement;}}continue;}if(card&&(child===card||child.contains(card))){if(child.hasAttribute('data-rp-npv-hidden'))child.removeAttribute('data-rp-npv-hidden');if(child!==card){mark(child,'data-rp-npv-path');filter(child);}}else mark(child,'data-rp-npv-hidden');}}
     filter(native);
     const toolbar=npv.firstElementChild;mark(toolbar,'data-rp-npv-toolbar');const height=toolbar.getBoundingClientRect().height+'px';if(native.style.getPropertyValue('--rp-npv-toolbar-height')!==height)native.style.setProperty('--rp-npv-toolbar-height',height);const context=toolbar.querySelector('a');if(context){mark(context,'data-rp-npv-hidden');if(!context.parentElement.querySelector('.rp-npv-label')){const label=document.createElement('span');label.className='rp-npv-label';label.textContent='Now playing';context.parentElement.append(label);}}
   }
@@ -181,14 +183,14 @@ function createRetrogradeFeatures({getSettings,setWidths,setPlayerArtworkDock,pr
     if(flags&PANEL){simplifyPanel();stats.passes.panel++;}
     if(flags&ARTIST){artistTables();stats.passes.artist++;}
     if(flags&QUEUE){queueTables();stats.passes.queue++;}
-    if(flags&MEDIA){lyrics.update();playerArtwork();stats.passes.media++;}
+    if(flags&MEDIA){lyrics.update();mark(document.documentElement,'data-rp-player-docked',String(getSettings().playerArtworkDock!==false&&!lyrics.isOpen()));playerArtwork();stats.passes.media++;}
     if(flags&LAYOUT)positionHandles(geometry);
     if(flags&CHROME){chrome.update();stats.passes.chrome++;}
   }finally{stats.syncs++;stats.lastMs=performance.now()-started;stats.totalMs+=stats.lastMs;stats.maxMs=Math.max(stats.maxMs,stats.lastMs);observe();}}
   window.addEventListener('resize',()=>schedule(LAYOUT|ARTIST),{signal});const unlisten=Spicetify.Platform.History.listen(()=>schedule(ALL));
   const songchange=()=>schedule(PANEL|QUEUE|MEDIA);Spicetify.Player.addEventListener('songchange',songchange);
   sync();
-  return{update:()=>schedule(ALL),resize:()=>schedule(LAYOUT|ARTIST),diagnostics:()=>({...stats,passes:{...stats.passes}}),dispose(){disposed=true;controller.abort();unlisten?.();frames.dispose();lyrics.dispose();chrome.dispose();dragController?.abort();observer.disconnect();mount.disconnect();resize.disconnect();Spicetify.Player.removeEventListener('songchange',songchange);for(const[e,props]of originals)for(const[k,[v,p]]of props){if(v)e.style.setProperty(k,v,p);else e.style.removeProperty(k);}for(const h of handles.values())h.remove();for(const h of headers)h.remove();document.querySelectorAll('.rp-track-summary,.rp-npv-label,.rp-library-navigation,.rp-library-dock').forEach(e=>e.remove());for(const e of tagged)for(const a of [...e.attributes])if(a.name.startsWith('data-rp-'))e.removeAttribute(a.name);delete document.documentElement.dataset.retrogradeResizing;}};
+  return{importTiming:input=>lyrics.importTiming(input),clearTiming:()=>lyrics.clearTiming(),update:()=>schedule(ALL),resize:()=>schedule(LAYOUT|ARTIST),diagnostics:()=>({...stats,passes:{...stats.passes}}),dispose(){disposed=true;controller.abort();unlisten?.();frames.dispose();lyrics.dispose();chrome.dispose();dragController?.abort();observer.disconnect();mount.disconnect();resize.disconnect();Spicetify.Player.removeEventListener('songchange',songchange);for(const[e,props]of originals)for(const[k,[v,p]]of props){if(v)e.style.setProperty(k,v,p);else e.style.removeProperty(k);}for(const h of handles.values())h.remove();for(const h of headers)h.remove();document.querySelectorAll('.rp-track-summary,.rp-npv-label,.rp-library-navigation,.rp-library-dock').forEach(e=>e.remove());for(const e of tagged)for(const a of [...e.attributes])if(a.name.startsWith('data-rp-'))e.removeAttribute(a.name);delete document.documentElement.dataset.retrogradeResizing;}};
 }
 
 
