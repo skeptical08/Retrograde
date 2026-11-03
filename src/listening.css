@@ -67,3 +67,5 @@ html[data-retrograde] [data-rp-media-root][data-rp-layout="stable"][data-rp-size
 html[data-retrograde-lyrics-cover-artwork="false"] [data-rp-media-root][data-rp-layout="stable"][data-rp-size="narrow"]:not([data-rp-media-mode="artwork"]) .rp-listening-info,
 html[data-retrograde-artwork-cover-artwork="false"] [data-rp-media-root][data-rp-layout="stable"][data-rp-size="narrow"][data-rp-media-mode="artwork"] .rp-listening-info { grid-template-columns:minmax(0,1fr) !important; }
 @media(max-height:600px) { html[data-retrograde] [data-rp-media-root][data-rp-layout="stable"][data-rp-size="wide"]:not([data-rp-media-mode="artwork"]) .rp-listening-info { width:min(calc(100% - 32px),28cqh,280px) !important; } }
+/* Spotify keeps a native draggable title region while Cinema hides its chrome. */
+html[data-retrograde] .rp-fullscreen-close,html[data-retrograde] .rp-listening-toolbar,html[data-retrograde] .rp-listening-controls { -webkit-app-region:no-drag !important; }
